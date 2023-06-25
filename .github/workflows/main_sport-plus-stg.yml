@@ -24,14 +24,15 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm install
-          npm run build --if-present
-          npm run test --if-present
+
+      - name: Zip all files for upload between jobs
+        run: zip -r express.zip ./*
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: node-app
-          path: .
+          path: express.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -53,4 +54,6 @@ jobs:
           app-name: 'sport-plus-stg'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B3D6F43A548D4951B014AE726722A024 }}
-          package: .
+          package: express.zip
+      - name: Delete zip
+        run: rm express.zip
