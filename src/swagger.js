@@ -28,6 +28,10 @@ const doc = {
       url: `http://localhost:${port}`,
       description: 'local server',
     },
+    {
+      url: `https://sport-plus-stg.azurewebsites.net`,
+      description: 'Azure server',
+    },
   ],
   components: {
     securitySchemes: {
