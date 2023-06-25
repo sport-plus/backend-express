@@ -9,6 +9,10 @@
     {
       "url": "http://localhost:8080",
       "description": "local server"
+    },
+    {
+      "url": "https://sport-plus-stg.azurewebsites.net",
+      "description": "Azure server"
     }
   ],
   "paths": {

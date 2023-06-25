@@ -1,7 +1,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-// const cors = require('cors');
+const cors = require('cors');
 var createError = require('http-errors');
 var path = require('path');
 const swaggerUI = require('swagger-ui-express');
