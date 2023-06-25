@@ -1,0 +1,1925 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "TheThaoPlus",
+    "description": "TheThaoPlus_BE"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "local server"
+    }
+  ],
+  "paths": {
+    "/api/role/": {
+      "get": {
+        "tags": [
+          "Role"
+        ],
+        "description": "Get all roles",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Role"
+        ],
+        "description": "Create new role - { \"name\": \"admin\" }",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/role/{id}": {
+      "get": {
+        "tags": [
+          "Role"
+        ],
+        "description": "Get one role - detail",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Role"
+        ],
+        "description": "Update role by ID - { \"name\": \"admin\" }",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Role"
+        ],
+        "description": "Delete role by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/role/block-role/{id}": {
+      "put": {
+        "tags": [
+          "Role"
+        ],
+        "description": "Update role status by ID - Block role",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          }
+        }
+      }
+    },
+    "/api/role/unblock-role/{id}": {
+      "put": {
+        "tags": [
+          "Role"
+        ],
+        "description": "Update role status by ID - Unblock role",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          }
+        }
+      }
+    },
+    "/api/user/register-user": {
+      "post": {
+        "tags": [
+          "Register"
+        ],
+        "description": "Register - Create new customer aaa {  \"firstname\": \"Van\",  \"lastname\": \"My Anh\",  \"email\": \"vthmyanh2604@gmail.com\",  \"phone\": \"0951258456\",  \"password\": \"myanh123\",  \"gender\": \"female\",  \"YOB\": 2002,  \"role\": \"646b6c50adcb2a812de75c26\" }",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "example": "any"
+                  },
+                  "firstname": {
+                    "example": "any"
+                  },
+                  "lastname": {
+                    "example": "any"
+                  },
+                  "phone": {
+                    "example": "any"
+                  },
+                  "password": {
+                    "example": "any"
+                  },
+                  "gender": {
+                    "example": "any"
+                  },
+                  "YOB": {
+                    "example": "any"
+                  },
+                  "role": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/register-owner": {
+      "post": {
+        "tags": [
+          "Register"
+        ],
+        "description": "Register - Create new owner - {  \"firstname\": \"Van\",  \"lastname\": \"My Anh\",  \"email\": \"vthmyanh2604@gmail.com\",  \"phone\": \"0951258456\",  \"password\": \"myanh123\",  \"gender\": \"female\",  \"YOB\": 2002,  \"role\": \"646b6c50adcb2a812de75c26\" }",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "example": "any"
+                  },
+                  "firstname": {
+                    "example": "any"
+                  },
+                  "lastname": {
+                    "example": "any"
+                  },
+                  "phone": {
+                    "example": "any"
+                  },
+                  "password": {
+                    "example": "any"
+                  },
+                  "gender": {
+                    "example": "any"
+                  },
+                  "YOB": {
+                    "example": "any"
+                  },
+                  "role": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/register-admin": {
+      "post": {
+        "tags": [
+          "Register"
+        ],
+        "description": "Register - Create new admin - {  \"firstname\": \"Van\",  \"lastname\": \"My Anh\",  \"email\": \"vthmyanh2604@gmail.com\",  \"phone\": \"0951258456\",  \"password\": \"myanh123\",  \"gender\": \"female\",  \"YOB\": 2002,  \"role\": \"646b6c50adcb2a812de75c26\" }",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "example": "any"
+                  },
+                  "firstname": {
+                    "example": "any"
+                  },
+                  "lastname": {
+                    "example": "any"
+                  },
+                  "phone": {
+                    "example": "any"
+                  },
+                  "password": {
+                    "example": "any"
+                  },
+                  "gender": {
+                    "example": "any"
+                  },
+                  "YOB": {
+                    "example": "any"
+                  },
+                  "role": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/forgot-password-token": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "Forgot Password - { \"email\": \"vthmyanh2604@gmail.com\" }",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/password": {
+      "put": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "Update password { \"oldPassword\": \"quang123\", \"password\": \"quang456\", \"confirmPassword\": \"quang456\" }",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "oldPassword": {
+                    "example": "any"
+                  },
+                  "password": {
+                    "example": "any"
+                  },
+                  "confirmPassword": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/login": {
+      "post": {
+        "tags": [
+          "Login"
+        ],
+        "description": "Login a custom - { \"email\": \"vthmyanh2604@gmail.com\", \"password\": \"myanh123\" }",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "example": "any"
+                  },
+                  "password": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/owner-login": {
+      "post": {
+        "tags": [
+          "Login"
+        ],
+        "description": "Login a owner - { \"email\": \"vthmyanh2604@gmail.com\", \"password\": \"myanh123\" }",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "example": "any"
+                  },
+                  "password": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/admin-login": {
+      "post": {
+        "tags": [
+          "Login"
+        ],
+        "description": "Login an admin - { \"email\": \"vthmyanh2604@gmail.com\", \"password\": \"myanh123\" }",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "example": "any"
+                  },
+                  "password": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/get-sport-list": {
+      "get": {
+        "tags": [
+          "Sport Owner"
+        ],
+        "description": "Get sport's list of Owner",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/user/get-sport-center-list": {
+      "get": {
+        "tags": [
+          "Sport Owner"
+        ],
+        "description": "Get all sport center for owner",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/user/reset-password/{token}": {
+      "put": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "Reset Password - { \"password\": \"son123\" }",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/edit": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "description": "Update user - {  \"firstname\": \"Van\",  \"lastname\": \"My Anh\",  \"email\": \"vthmyanh2604@gmail.com\",  \"phone\": \"0951258456\",  \"password\": \"myanh123\",  \"gender\": \"female\",  \"YOB\": 2002,  \"role\": \"646b6c50adcb2a812de75c26\" }",
+        "parameters": [],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "example": "any"
+                  },
+                  "firstname": {
+                    "example": "any"
+                  },
+                  "lastname": {
+                    "example": "any"
+                  },
+                  "phone": {
+                    "example": "any"
+                  },
+                  "password": {
+                    "example": "any"
+                  },
+                  "gender": {
+                    "example": "any"
+                  },
+                  "YOB": {
+                    "example": "any"
+                  },
+                  "role": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/save-address": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "description": "Update user's address",
+        "parameters": [],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "address": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/refresh": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "Get refresh token",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/user/logout": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "Logout account",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/user/all-users": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "Get all users",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/user/block-user/{id}": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "description": "Update user status by ID - Block user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          }
+        }
+      }
+    },
+    "/api/user/unblock-user/{id}": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "description": "Update user status by ID - Unblock user",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          }
+        }
+      }
+    },
+    "/api/user/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "Get a user - User Detail",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "description": "Delete user by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/sport/sportlist": {
+      "put": {
+        "tags": [
+          "Sport"
+        ],
+        "description": "Add sport to sport's list of Owner",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "sportId": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sport/": {
+      "get": {
+        "tags": [
+          "Sport"
+        ],
+        "description": "Create new sport",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Sport"
+        ],
+        "description": "Create new sport - { \"name\": \"football\", image: \"\" }",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "example": "any"
+                  },
+                  "name": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sport/{id}": {
+      "get": {
+        "tags": [
+          "Sport"
+        ],
+        "description": "Get one sport - detail",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Sport"
+        ],
+        "description": "Update sport by ID - { \"name\": \"football\", image: \"\" }",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "example": "any"
+                  },
+                  "name": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Sport"
+        ],
+        "description": "Delete sport by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/sport/block-sport/{id}": {
+      "put": {
+        "tags": [
+          "Sport"
+        ],
+        "description": "Update sport status by ID - Block sport",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          }
+        }
+      }
+    },
+    "/api/sport/unblock-sport/{id}": {
+      "put": {
+        "tags": [
+          "Sport"
+        ],
+        "description": "Update sport status by ID - Unblock sport",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          }
+        }
+      }
+    },
+    "/api/sport-center/": {
+      "post": {
+        "tags": [
+          "Sport Center"
+        ],
+        "description": "Create new sport center - {  \"name\": \"Sân bóng đá mini Tiến Minh\",  image: \"\",  \"address\":\"Số 141 – đường 339 – Phường Phước Long – Quận 9 – TPHCM\",  \"latitude\":\"25.0359\",  \"longtitude\":\"66.6431\",  \"openTime\":\"08:00\",  \"closeTime\":\"22:00\",  \"sportId\": \"646b3fb2fb8ee6a504e04826\"  }",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "sportId": {
+                    "example": "any"
+                  },
+                  "name": {
+                    "example": "any"
+                  },
+                  "image": {
+                    "example": "any"
+                  },
+                  "address": {
+                    "example": "any"
+                  },
+                  "description": {
+                    "example": "any"
+                  },
+                  "latitude": {
+                    "example": "any"
+                  },
+                  "longtitude": {
+                    "example": "any"
+                  },
+                  "openTime": {
+                    "example": "any"
+                  },
+                  "closeTime": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Sport Center"
+        ],
+        "description": "Get all sport center for customers",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/sport-center/sport-center-of-owner": {
+      "get": {
+        "tags": [
+          "Sport Center"
+        ],
+        "description": "Get all sport center for owner by id",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/sport-center/get-sport-field-list/{sportCenterId}": {
+      "get": {
+        "tags": [
+          "Sport Field"
+        ],
+        "description": "Get all sport field by sport center's ID",
+        "parameters": [
+          {
+            "name": "sportCenterId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/sport-center/{id}": {
+      "get": {
+        "tags": [
+          "Sport Center"
+        ],
+        "description": "Get one sport center - detail sport center",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Sport Center"
+        ],
+        "description": "Update sport center by ID - {  \"name\": \"Sân bóng đá mini Tiến Minh\",  \"image\": \"\",  \"address\":\"Số 141 – đường 339 – Phường Phước Long – Quận 9 – TPHCM\",  \"latitude\":\"25.0359\",  \"longtitude\":\"66.6431\",  \"openTime\":\"08:00\",  \"closeTime\":\"22:00\",  \"sportId\": \"646b3fb2fb8ee6a504e04826\"  }",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "sportId": {
+                    "example": "any"
+                  },
+                  "name": {
+                    "example": "any"
+                  },
+                  "image": {
+                    "example": "any"
+                  },
+                  "address": {
+                    "example": "any"
+                  },
+                  "latitude": {
+                    "example": "any"
+                  },
+                  "longtitude": {
+                    "example": "any"
+                  },
+                  "openTime": {
+                    "example": "any"
+                  },
+                  "closeTime": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sport-center/{id}/{sportId}": {
+      "delete": {
+        "tags": [
+          "Sport Center"
+        ],
+        "description": "Delete sport center by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sportId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/sport-center/block-sport-center/{id}": {
+      "put": {
+        "tags": [
+          "Sport Center"
+        ],
+        "description": "Update sport center status by ID - Block sport center",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          }
+        }
+      }
+    },
+    "/api/sport-center/unblock-sport-center/{id}": {
+      "put": {
+        "tags": [
+          "Sport Center"
+        ],
+        "description": "Update sport center status by ID - Unblock sport center",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          }
+        }
+      }
+    },
+    "/api/sport-field/": {
+      "post": {
+        "tags": [
+          "Sport Field"
+        ],
+        "description": "Create new sport field - {  \"sportCenterId\": \"646c46787a6bd46e911d5db4\",  \"name\": \"Sân cỏ nhân tạo\",  \"images\":[  \"image-1\",  \"image-2\",  \"image-3\",  ],  \"price\": 200000  }",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "sportCenterId": {
+                    "example": "any"
+                  },
+                  "name": {
+                    "example": "any"
+                  },
+                  "images": {
+                    "example": "any"
+                  },
+                  "price": {
+                    "example": "any"
+                  },
+                  "fieldType": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Sport Field"
+        ],
+        "description": "Create new sport field",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/sport-field/{id}": {
+      "get": {
+        "tags": [
+          "Sport Field"
+        ],
+        "description": "Get one sport field - detail sport field",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Sport Field"
+        ],
+        "description": "Update sport field by ID - {  \"name\": \"Sân cỏ nhân tạo\",  \"images\":[  \"image-1\",  \"image-2\",  \"image-3\",  ],  \"price\": 200000  }",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "any"
+                  },
+                  "images": {
+                    "example": "any"
+                  },
+                  "price": {
+                    "example": "any"
+                  },
+                  "fieldType": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sport-field/{id}/{sportCenterId}": {
+      "delete": {
+        "tags": [
+          "Sport Field"
+        ],
+        "description": "Delete sport field by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sportCenterId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/sport-field/block-sport-field/{id}": {
+      "put": {
+        "tags": [
+          "Sport Field"
+        ],
+        "description": "Update sport field status by ID - Block sport field",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/sport-field/unblock-sport-field/{id}": {
+      "put": {
+        "tags": [
+          "Sport Field"
+        ],
+        "description": "Update sport field status by ID - Unblock sport field",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          }
+        }
+      }
+    },
+    "/api/booking/create-booking-for-user": {
+      "post": {
+        "tags": [
+          "Booking"
+        ],
+        "description": "User create new booking - {  \"name\": \"Sân bóng đá mini Tiến Minh\",  \"address\":\"Số 141 – đường 339 – Phường Phước Long – Quận 9 – TPHCM\",  \"latitude\":\"25.0359\",  \"longtitude\":\"66.6431\",  \"openTime\":\"08:00\",  \"closeTime\":\"22:00\",  \"sportId\": \"646b3fb2fb8ee6a504e04826\"  }",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ownerCenterId": {
+                    "example": "any"
+                  },
+                  "sportCenterId": {
+                    "example": "any"
+                  },
+                  "sportFieldId": {
+                    "example": "any"
+                  },
+                  "totalPrice": {
+                    "example": "any"
+                  },
+                  "deposit": {
+                    "example": "any"
+                  },
+                  "start": {
+                    "example": "any"
+                  },
+                  "end": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/booking/create-booking-for-owner": {
+      "post": {
+        "tags": [
+          "Booking"
+        ],
+        "description": "Owner create new booking - {  \"name\": \"Sân bóng đá mini Tiến Minh\",  \"address\":\"Số 141 – đường 339 – Phường Phước Long – Quận 9 – TPHCM\",  \"latitude\":\"25.0359\",  \"longtitude\":\"66.6431\",  \"openTime\":\"08:00\",  \"closeTime\":\"22:00\",  \"sportId\": \"646b3fb2fb8ee6a504e04826\"  }",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "sportCenterId": {
+                    "example": "any"
+                  },
+                  "sportFieldId": {
+                    "example": "any"
+                  },
+                  "totalPrice": {
+                    "example": "any"
+                  },
+                  "deposit": {
+                    "example": "any"
+                  },
+                  "start": {
+                    "example": "any"
+                  },
+                  "end": {
+                    "example": "any"
+                  },
+                  "userBooking": {
+                    "example": "any"
+                  },
+                  "phoneBooking": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/booking/customer-history-booking": {
+      "get": {
+        "tags": [
+          "Booking"
+        ],
+        "description": "Get history booking for customers",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/booking/booking-of-owner": {
+      "get": {
+        "tags": [
+          "Booking"
+        ],
+        "description": "Get all booking for owner",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/booking/{id}": {
+      "get": {
+        "tags": [
+          "Booking"
+        ],
+        "description": "Get one booking - detail booking",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Booking"
+        ],
+        "description": "Update sport center by ID - {  \"name\": \"Sân bóng đá mini Tiến Minh\",  \"address\":\"Số 141 – đường 339 – Phường Phước Long – Quận 9 – TPHCM\",  \"latitude\":\"25.0359\",  \"longtitude\":\"66.6431\",  \"openTime\":\"08:00\",  \"closeTime\":\"22:00\",  \"sportId\": \"646b3fb2fb8ee6a504e04826\"  }",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/booking/cancel-booking/{id}": {
+      "put": {
+        "tags": [
+          "Booking"
+        ],
+        "description": "Update sport center status by ID - Cancel",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          }
+        }
+      }
+    },
+    "/api/booking/tracking/{id}": {
+      "put": {
+        "tags": [
+          "Booking"
+        ],
+        "description": "Update sport center status by ID - Unblock sport center",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tracking": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/payment/create-booking-for-user": {
+      "post": {
+        "tags": [
+          "Payment"
+        ],
+        "description": "User create new booking - {  \"name\": \"Sân bóng đá mini Tiến Minh\",  \"address\":\"Số 141 – đường 339 – Phường Phước Long – Quận 9 – TPHCM\",  \"latitude\":\"25.0359\",  \"longtitude\":\"66.6431\",  \"openTime\":\"08:00\",  \"closeTime\":\"22:00\",  \"sportId\": \"646b3fb2fb8ee6a504e04826\"  }",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ownerCenterId": {
+                    "example": "any"
+                  },
+                  "sportCenterId": {
+                    "example": "any"
+                  },
+                  "sportFieldId": {
+                    "example": "any"
+                  },
+                  "totalPrice": {
+                    "example": "any"
+                  },
+                  "deposit": {
+                    "example": "any"
+                  },
+                  "dateBooking": {
+                    "example": "any"
+                  },
+                  "startTime": {
+                    "example": "any"
+                  },
+                  "hours": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/payment/create-booking-for-owner": {
+      "post": {
+        "tags": [
+          "Payment"
+        ],
+        "description": "Owner create new booking - {  \"name\": \"Sân bóng đá mini Tiến Minh\",  \"address\":\"Số 141 – đường 339 – Phường Phước Long – Quận 9 – TPHCM\",  \"latitude\":\"25.0359\",  \"longtitude\":\"66.6431\",  \"openTime\":\"08:00\",  \"closeTime\":\"22:00\",  \"sportId\": \"646b3fb2fb8ee6a504e04826\"  }",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ownerCenterId": {
+                    "example": "any"
+                  },
+                  "sportCenterId": {
+                    "example": "any"
+                  },
+                  "sportFieldId": {
+                    "example": "any"
+                  },
+                  "totalPrice": {
+                    "example": "any"
+                  },
+                  "deposit": {
+                    "example": "any"
+                  },
+                  "dateBooking": {
+                    "example": "any"
+                  },
+                  "startTime": {
+                    "example": "any"
+                  },
+                  "hours": {
+                    "example": "any"
+                  },
+                  "userBooking": {
+                    "example": "any"
+                  },
+                  "phoneBooking": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/payment/customer-history-booking": {
+      "get": {
+        "tags": [
+          "Payment"
+        ],
+        "description": "Get history booking for customers",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/payment/booking-of-owner": {
+      "get": {
+        "tags": [
+          "Payment"
+        ],
+        "description": "Get all booking for owner",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/payment/{id}": {
+      "get": {
+        "tags": [
+          "Payment"
+        ],
+        "description": "Get one booking - detail booking",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Payment"
+        ],
+        "description": "Update sport center by ID - {  \"name\": \"Sân bóng đá mini Tiến Minh\",  \"address\":\"Số 141 – đường 339 – Phường Phước Long – Quận 9 – TPHCM\",  \"latitude\":\"25.0359\",  \"longtitude\":\"66.6431\",  \"openTime\":\"08:00\",  \"closeTime\":\"22:00\",  \"sportId\": \"646b3fb2fb8ee6a504e04826\"  }",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/payment/cancel-booking/{id}": {
+      "put": {
+        "tags": [
+          "Payment"
+        ],
+        "description": "Update sport center status by ID - Cancel",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          }
+        }
+      }
+    },
+    "/api/payment/tracking/{id}": {
+      "put": {
+        "tags": [
+          "Payment"
+        ],
+        "description": "Update sport center status by ID - Unblock sport center",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tracking": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "in": "header",
+        "name": "Authorization",
+        "description": "Bearer token to access these api endpoints",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ]
+}
