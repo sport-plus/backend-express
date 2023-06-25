@@ -14,7 +14,7 @@ const router = require('./routes/Routes');
 connectDatabase();
 
 const app = express();
-// app.use(cors({ origin: true }));
+app.use(cors({ origin: true }));
 
 // app.use(express.static('public'));
 app.use(express.json());
