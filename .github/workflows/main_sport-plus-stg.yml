@@ -51,9 +51,10 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'sport-plus-stg'
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B3D6F43A548D4951B014AE726722A024 }}
+          app-name: 'sport-plus-backend'
+          slot-name: 'production'
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_d5d8697a0cd14a628fda9b8afeffe16a }}
           package: express.zip
+          
       - name: Delete zip
         run: rm express.zip
