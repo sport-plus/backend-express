@@ -29,7 +29,7 @@ const doc = {
       description: 'local server',
     },
     {
-      url: `https://sport-plus-stg.azurewebsites.net`,
+      url: `https://sport-plus-backend.azurewebsites.net`,
       description: 'Azure server',
     },
   ],
