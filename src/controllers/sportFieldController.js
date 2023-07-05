@@ -2,7 +2,7 @@ const asyncHandler = require('express-async-handler');
 const SportFields = require('../models/sportFieldModel');
 const SportCenters = require('../models/sportCenterModel');
 
-const createSportField = asyncHandler(async (req, res) => {
+const createSportField = async (req, res) => {
   /* 
     #swagger.tags = ['Sport Field']
     #swagger.description = Create new sport field - {
@@ -28,6 +28,7 @@ const createSportField = asyncHandler(async (req, res) => {
   try {
     const newSportField = await SportFields.create(sportField);
     addToSportCenter(sportCenterId, newSportField);
+    
     res.status(201).json({
       status: 201,
       message: 'Sport Field created successfully.',
@@ -39,8 +40,37 @@ const createSportField = asyncHandler(async (req, res) => {
       message: 'Sport Field created fail.',
     });
   }
-});
+};
+const addDatePrices = async (sportFieldsId, priceOption) => {
+  const weeks = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 
+  const datePrice = []
+
+  priceOption.forEach(element => {
+
+    if (element.timeEnd) {
+
+      let timeStart = element.timeStart
+
+      while (timeStart <= element.timeEnd) {
+        datePrice.push({
+          sportFieldsId,
+          price: element.price,
+          weekday: weeks[timeStart]
+        })
+        timeStart++
+      }
+    } else {
+      datePrice.push({
+        sportFieldsId,
+        price: element.price,
+        weekday: weeks[timeStart]
+      })
+    }
+  });
+
+  await DatePrices.insertMany(datePrice)
+}
 const addToSportCenter = async (sportCenterId, newSportField) => {
   try {
     const sportCenter = await SportCenters.findById(sportCenterId);

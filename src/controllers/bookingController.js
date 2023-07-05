@@ -4,6 +4,13 @@ const Bookings = require('../models/bookingModel');
 const Users = require('../models/userModel');
 const SportFields = require('../models/sportFieldModel');
 
+
+const validateDateBooking = async (req, res, next) => {
+  const { date, time, hours, sportFieldId } = req.query
+  
+}
+
+
 const createBookingForUser = asyncHandler(async (req, res) => {
   /* 
     #swagger.tags = ['Booking']

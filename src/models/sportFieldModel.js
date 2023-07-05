@@ -4,16 +4,6 @@ const Schema = mongoose.Schema;
 
 const sportFieldSchema = new Schema(
   {
-    name: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    images: [],
-    price: {
-      type: Number,
-      required: true,
-    },
     fieldType: {
       type: String,
       default: '5 x 5',

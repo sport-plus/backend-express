@@ -2,6 +2,9 @@ const asyncHandler = require('express-async-handler');
 const SportCenters = require('../models/sportCenterModel');
 const Users = require('../models/userModel');
 const Sports = require('../models/sportModel');
+const DatePrices = require('../models/datePriceModel');
+const SportFields = require('../models/sportFieldModel');
+
 
 const createSportCenter = asyncHandler(async (req, res) => {
   /* 
@@ -31,6 +34,11 @@ const createSportCenter = asyncHandler(async (req, res) => {
     longtitude,
     openTime,
     closeTime,
+    priceOption,
+    totalrating,
+    status,
+    ratings
+
   } = req.body;
   const newSportCenterBody = {
     name,
@@ -44,9 +52,14 @@ const createSportCenter = asyncHandler(async (req, res) => {
     owner: _id,
     sport: sportId,
   };
+
+  console.log(newSportCenterBody);
   try {
     const newSportCenter = await SportCenters.create(newSportCenterBody);
     addToOwnerAndSport(_id, sportId, newSportCenter);
+    const fields = await createSportFields(newSportCenter.id, priceOption)
+
+    await addDatePrices(fields, priceOption)
     res.status(201).json({
       status: 201,
       message: 'Sport Center created successfully.',
@@ -55,11 +68,57 @@ const createSportCenter = asyncHandler(async (req, res) => {
   } catch (error) {
     res.status(400).json({
       status: 400,
-      message: 'Created sport center fail!',
+      message: error.message,
     });
   }
 });
 
+const addDatePrices = async (fields, priceOption) => {
+  const weeks = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+
+  const datePrices = []
+  fields.forEach((field, index) => {
+    console.log(priceOption[index].listPrice);
+    const listPrices = priceOption[index].listPrice
+    listPrices.forEach(listPrice => {
+      let timeStart = listPrice.timeStart
+      const datePrice = {
+        sportFieldId: field.id,
+        price: listPrice.price,
+        weekday: weeks[timeStart]
+      }
+      if (listPrice.timeEnd)
+        while (timeStart <= listPrice.timeEnd) {
+          datePrices.push({
+            ...datePrice,
+            weekday: weeks[timeStart]
+          })
+          timeStart++
+        }
+      else {
+        datePrices.push(datePrice)
+      }
+    });
+
+  });
+
+  console.log(datePrices);
+  await DatePrices.insertMany(datePrices)
+}
+
+const createSportFields = async (sportCenterId, priceOption) => {
+  const price = []
+  priceOption.forEach(element => {
+    price.push({
+      fieldType: element.fieldType,
+      sportCenter: sportCenterId,
+      status: true
+    })
+  });
+
+  return await SportFields.insertMany(price)
+
+}
 const addToOwnerAndSport = async (userId, sportId, newSportCenter) => {
   try {
     const user = await Users.findById(userId);

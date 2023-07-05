@@ -979,7 +979,7 @@
         "tags": [
           "Sport Center"
         ],
-        "description": "Create new sport center - {  \"name\": \"Sân bóng đá mini Tiến Minh\",  image: \"\",  \"address\":\"Số 141 – đường 339 – Phường Phước Long – Quận 9 – TPHCM\",  \"latitude\":\"25.0359\",  \"longtitude\":\"66.6431\",  \"openTime\":\"08:00\",  \"closeTime\":\"22:00\",  \"sportId\": \"646b3fb2fb8ee6a504e04826\"  }",
+        "description": "Create new sport center - {  \"name\": \"Sân bóng đá mini Tiến Minh\",  image: \"\",  \"address\":\"Số 141 – đường 339 – Phường Phước Long – Quận 9 – TPHCM\",  \"latitude\":\"25.0359\",  \"longtitude\":\"66.6431\",  \"openTime\":\"08:00\",  \"closeTime\":\"22:00\",  \"sportId\": \"646b3fb2fb8ee6a504e04826\"  } \n [\"monday\", \"tuesday\", \"wednesday\", \"thursday\", \"friday\", \"saturday\", \"sunday\"]",
         "parameters": [],
         "responses": {
           "201": {
@@ -1021,6 +1021,38 @@
                   },
                   "closeTime": {
                     "example": "any"
+                  },
+                  "priceOption": {
+                    "example": [
+                      {
+                        "fieldType": "5x5",
+                        "listPrice": [
+                          {
+                            "timeStart": 0,
+                            "timeEnd": 3,
+                            "price": 400000
+                          },
+                          {
+                            "timeStart": 4,
+                            "timeEnd": 6,
+                            "price": 450000
+                          }
+                        ]
+                      },
+                      {
+                        "fieldType": "7x7",
+                        "listPrice": [
+                          {
+                            "timeStart": 0,
+                            "price": 400000
+                          },
+                          {
+                            "timeStart": 4,
+                            "price": 450000
+                          }
+                        ]
+                      }
+                    ]
                   }
                 }
               }

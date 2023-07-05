@@ -206,6 +206,7 @@ const loginAdmin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   //check id user exits or not
   const findAdmin = await Users.findOne({ email: email }).populate('role');
+  console.log("x", findAdmin);
   if (findAdmin.role.name !== 'admin') throw new Error('Not Authorized');
   if (findAdmin && (await findAdmin.isPasswordMatched(password))) {
     const refreshToken = await generateRefreshToken(findAdmin?._id);

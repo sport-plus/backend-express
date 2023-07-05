@@ -9,7 +9,7 @@ const swaggerFile = require('./swagger_output.json');
 const connectDatabase = require('./config/database');
 const { notFound, errorHandler } = require('./middlewares/errorHandler');
 
-const router = require('./routes/Routes');
+const router = require('./routes');
 
 connectDatabase();
 
