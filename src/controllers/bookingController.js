@@ -3,13 +3,64 @@ const SportCenters = require('../models/sportCenterModel');
 const Bookings = require('../models/bookingModel');
 const Users = require('../models/userModel');
 const SportFields = require('../models/sportFieldModel');
+const Slots = require('../models/slotModel');
 
 
 const validateDateBooking = async (req, res, next) => {
-  const { date, time, hours, sportFieldId } = req.query
-  
+  const { date, start, end, sportFieldId } = req.query
+
+  console.log(req.query);
+  const bookings = await Bookings.find({
+    $and: [
+      { sportField: sportFieldId },
+      { start },
+      { end },
+      { date: new Date(date).setHours(0, 0, 0, 0) },
+    ]
+  })
+  console.log(bookings);
+  if (bookings.length > 0) return res.status(400).json({
+    message: 'this time already booking'
+  })
+
+  return res.status(200).json({
+    message: "Ok"
+  })
 }
 
+const bookingsAvailable = async (req, res) => {
+  const { sportFieldId, date } = req.query
+  const slots = await Slots.find({ sportFieldId: sportFieldId })
+  const bookings = await Bookings.find({
+    $and: [
+      { sportField: sportFieldId },
+      { date: new Date(date).setHours(0, 0, 0, 0) },
+    ]
+  })
+  console.log(slots[0].availability);
+  const newSlots = []
+  slots[0].availability.forEach((slot) => {
+    newSlots.push({
+      startTime: slot.startTime,
+      endTime: slot.endTime,
+      status: true
+    })
+  })
+  if (bookings.length > 0) {
+    bookings.forEach((booking) => {
+      console.log(booking);
+      newSlots.forEach((slot, index) => {
+        if (booking.start == slot.startTime && booking.end == slot.endTime) {
+          newSlots[index].status = false
+        }
+      })
+    })
+  }
+  return res.status(201).json({
+    status: 201,
+    availability: newSlots,
+  });
+}
 
 const createBookingForUser = asyncHandler(async (req, res) => {
   /* 
@@ -34,6 +85,7 @@ const createBookingForUser = asyncHandler(async (req, res) => {
     deposit,
     start,
     end,
+    date
   } = req.body;
 
   let isValidUser = await Users.findById(owner);
@@ -59,6 +111,7 @@ const createBookingForUser = asyncHandler(async (req, res) => {
     deposit,
     start,
     end,
+    date: new Date(date)
   };
 
   try {
@@ -358,4 +411,6 @@ module.exports = {
   updateBooking,
   cancelBooking,
   updateTrackingBooking,
+  validateDateBooking,
+  bookingsAvailable
 };

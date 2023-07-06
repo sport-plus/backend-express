@@ -15,11 +15,22 @@ const {
   getAllBookingForOwner,
   cancelBooking,
   updateTrackingBooking,
+  validateDateBooking,
+  bookingsAvailable,
 } = require('../controllers/bookingController');
 
 const bookingRouter = express.Router();
 
 bookingRouter.use(bodyParser.json());
+
+bookingRouter
+  .route('/validate-date-booking')
+  .get(authMiddleware, isUser, validateDateBooking);
+
+bookingRouter
+  .route('/bookings-available')
+  .get(authMiddleware, isUser, bookingsAvailable);
+
 
 bookingRouter
   .route('/create-booking-for-user')

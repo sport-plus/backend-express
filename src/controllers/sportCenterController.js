@@ -4,6 +4,7 @@ const Users = require('../models/userModel');
 const Sports = require('../models/sportModel');
 const DatePrices = require('../models/datePriceModel');
 const SportFields = require('../models/sportFieldModel');
+const Slots = require('../models/slotModel');
 
 
 const createSportCenter = asyncHandler(async (req, res) => {
@@ -53,32 +54,46 @@ const createSportCenter = asyncHandler(async (req, res) => {
     sport: sportId,
   };
 
-  console.log(newSportCenterBody);
   try {
-    const newSportCenter = await SportCenters.create(newSportCenterBody);
-    addToOwnerAndSport(_id, sportId, newSportCenter);
-    const fields = await createSportFields(newSportCenter.id, priceOption)
 
+
+    const newSportCenter = await SportCenters.create(newSportCenterBody);
+    await addToOwnerAndSport(_id, sportId, newSportCenter);
+    const fields = await createSportFields(newSportCenter.id, priceOption)
     await addDatePrices(fields, priceOption)
-    res.status(201).json({
+    await addSlots(fields, priceOption)
+    return res.status(201).json({
       status: 201,
       message: 'Sport Center created successfully.',
       newSportCenter: newSportCenter,
     });
   } catch (error) {
-    res.status(400).json({
+    return res.status(400).json({
       status: 400,
       message: error.message,
     });
   }
 });
 
+const addSlots = async (fields, priceOption) => {
+  const newSlots = []
+
+  fields.forEach((field, index) => {
+    const slots = priceOption[index].slots
+    newSlots.push({
+      sportFieldId: field.id,
+      availability: slots
+    })
+  });
+
+  await Slots.insertMany(newSlots)
+}
+
 const addDatePrices = async (fields, priceOption) => {
   const weeks = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 
   const datePrices = []
   fields.forEach((field, index) => {
-    console.log(priceOption[index].listPrice);
     const listPrices = priceOption[index].listPrice
     listPrices.forEach(listPrice => {
       let timeStart = listPrice.timeStart
@@ -102,7 +117,6 @@ const addDatePrices = async (fields, priceOption) => {
 
   });
 
-  console.log(datePrices);
   await DatePrices.insertMany(datePrices)
 }
 

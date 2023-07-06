@@ -13,24 +13,25 @@ const bookingSchema = new Schema(
       required: true,
     },
     start: {
-      type: Date,
+      type: String,
       required: [true, 'Please Insert The Start of your event'],
       min: [new Date(), "can't be before now!!"],
     },
     end: {
-      type: Date,
-      min: [
-        function () {
-          const date = new Date(this.start);
-          const validDate = new Date(date.setHours(date.getHours() + 1));
-          return validDate;
-        },
-        'Event End must be at least one hour a head of event time',
-      ],
-      default: function () {
-        const date = new Date(this.start);
-        return date.setDate(date.getHours() + 1, date.getMinutes() + 30);
-      },
+      type: String,
+      required: true
+      // min: [
+      //   function () {
+      //     const date = new Date(this.start);
+      //     const validDate = new Date(date.setHours(date.getHours() + 1));
+      //     return validDate;
+      //   },
+      //   'Event End must be at least one hour a head of event time',
+      // ],
+      // default: function () {
+      //   const date = new Date(this.start);
+      //   return date.setDate(date.getHours() + 1, date.getMinutes() + 30);
+      // },
     },
     tracking: {
       type: String,
@@ -66,8 +67,11 @@ const bookingSchema = new Schema(
       type: Boolean,
       default: true,
     },
+    date: {
+      type: Date,
+      required: true,
+    }
   },
-  { timestamps: true }
 );
 
 const Bookings = mongoose.model('bookings', bookingSchema);

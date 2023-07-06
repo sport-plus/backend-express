@@ -13,12 +13,13 @@ const {
   getSportFieldListByID,
   getAllSportCenterForOwner,
 } = require('../controllers/sportCenterController');
+const { validateAttributesCreateSportCenter } = require('../middlewares/validateAttributesCreateSportCenter');
 
 const sportCenterRouter = express.Router();
 
 sportCenterRouter.use(bodyParser.json());
 
-sportCenterRouter.route('/').post(authMiddleware, isOwner, createSportCenter);
+sportCenterRouter.route('/').post(authMiddleware, isOwner, validateAttributesCreateSportCenter,createSportCenter);
 
 sportCenterRouter.route('/').get(authMiddleware, getAllSportCenters);
 

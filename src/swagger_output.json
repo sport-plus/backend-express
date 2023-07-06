@@ -1667,38 +1667,130 @@
         }
       }
     },
-    "/api/booking/tracking/{id}": {
-      "put": {
+    "/api/booking/validate-date-booking": {
+      "get": {
         "tags": [
           "Booking"
         ],
-        "description": "Update sport center status by ID - Unblock sport center",
+        "summary": "Get reservations",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
+            "name": "date",
+            "in": "query",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "type": "string",
+            "description": "Date of the reservation (e.g., '2023-07-06T11:11:54.948Z')"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "Start time of the reservation (e.g., '8:00 PM')"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "End time of the reservation (e.g., '9:00 PM')"
+          },
+          {
+            "name": "sportFieldId",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "ID of the sport field (e.g., '64a6491f252cfa9a600b8ad8')"
           }
         ],
         "responses": {
-          "202": {
-            "description": "Accepted"
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "tracking": {
-                    "example": "any"
-                  }
-                }
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Reservation"
               }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          }
+        }
+      },
+      "definitions": {
+        "Reservation": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "date": {
+              "type": "string",
+              "format": "date"
+            },
+            "start": {
+              "type": "string",
+              "format": "time"
+            },
+            "end": {
+              "type": "string",
+              "format": "time"
+            },
+            "sportFieldId": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/api/booking/bookings-available": {
+      "get": {
+        "tags": [
+          "Booking"
+        ],
+        "summary": "Get reservations",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "Date of the reservation (e.g., '2023-07-06T11:11:54.948Z')"
+          },
+          {
+            "name": "sportFieldId",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "ID of the sport field (e.g., '64a6491f252cfa9a600b8ad8')"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Reservation"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          }
+        }
+      },
+      "definitions": {
+        "Reservation": {
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string",
+              "format": "date"
+            },
+            "sportFieldId": {
+              "type": "string"
             }
           }
         }
