@@ -129,7 +129,6 @@ const createSportFields = async (sportCenterId, priceOption) => {
       status: true
     })
   });
-  console.log(sportFields);
 
   return await SportFields.insertMany(sportFields)
 
