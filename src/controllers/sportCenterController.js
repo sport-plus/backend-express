@@ -121,16 +121,17 @@ const addDatePrices = async (fields, priceOption) => {
 }
 
 const createSportFields = async (sportCenterId, priceOption) => {
-  const price = []
+  const sportFields = []
   priceOption.forEach(element => {
-    price.push({
+    sportFields.push({
       fieldType: element.fieldType,
       sportCenter: sportCenterId,
       status: true
     })
   });
+  console.log(sportFields);
 
-  return await SportFields.insertMany(price)
+  return await SportFields.insertMany(sportFields)
 
 }
 const addToOwnerAndSport = async (userId, sportId, newSportCenter) => {

@@ -67,12 +67,6 @@ const sportCenterSchema = new Schema(
       ref: 'sports',
       require: true,
     },
-    sportFields: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'sportFields',
-      },
-    ],
   },
   { timestamps: true }
 );
