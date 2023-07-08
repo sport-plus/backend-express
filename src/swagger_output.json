@@ -1764,6 +1764,15 @@
             "required": true,
             "type": "string",
             "description": "ID of the sport field (e.g., '64a6491f252cfa9a600b8ad8')"
+          },
+          {
+            "name": "fieldType",
+            "in": "query",
+            "description": "Type of the field",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1790,6 +1799,9 @@
               "format": "date"
             },
             "sportFieldId": {
+              "type": "string"
+            },
+            "fieldType": {
               "type": "string"
             }
           }
@@ -2025,6 +2037,87 @@
                   "tracking": {
                     "example": "any"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sport-field/types": {
+      "get": {
+        "tags": [
+          "Booking"
+        ],
+        "summary": "Get sport field types",
+        "parameters": [
+          {
+            "name": "sportCenterId",
+            "in": "query",
+            "description": "ID of the sport center",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      }
+                    },
+                    "example": {
+                      "fieldTypes": [
+                        "5x5",
+                        "7x7"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }

@@ -4,12 +4,11 @@ const Bookings = require('../models/bookingModel');
 const Users = require('../models/userModel');
 const SportFields = require('../models/sportFieldModel');
 const Slots = require('../models/slotModel');
+const morgan = require('morgan');
 
 
 const validateDateBooking = async (req, res, next) => {
   const { date, start, end, sportFieldId } = req.query
-
-  console.log(req.query);
   const bookings = await Bookings.find({
     $and: [
       { sportField: sportFieldId },
@@ -28,39 +27,91 @@ const validateDateBooking = async (req, res, next) => {
   })
 }
 
+
+
 const bookingsAvailable = async (req, res) => {
-  const { sportFieldId, date } = req.query
-  const slots = await Slots.find({ sportFieldId: sportFieldId })
+  const { sportCenterId, fieldType, date } = req.query
+
+
+
+  const sportFields = (await SportFields.find({
+    $and: [
+      { sportCenter: sportCenterId },
+      { fieldType }
+    ]
+  })).map(field => field.id)
+  const slots = await Slots.find({
+    sportFieldId: {
+      "$in": sportFields
+    }
+  })
   const bookings = await Bookings.find({
     $and: [
-      { sportField: sportFieldId },
+      {
+        sportField: {
+          "$in": sportFields
+        }
+      },
       { date: new Date(date).setHours(0, 0, 0, 0) },
     ]
   })
-  console.log(slots[0].availability);
+
   const newSlots = []
-  slots[0].availability.forEach((slot) => {
-    newSlots.push({
-      startTime: slot.startTime,
-      endTime: slot.endTime,
-      status: true
-    })
-  })
+  const list = slots[0]?.availability.map((slot, index) => ({
+    startTime: slot.startTime,
+    endTime: slot.endTime,
+    available: true,
+  })) || []
+  const map = new Map();
+
+  console.log(list, slots, bookings);
+
   if (bookings.length > 0) {
+
     bookings.forEach((booking) => {
-      console.log(booking);
-      newSlots.forEach((slot, index) => {
-        if (booking.start == slot.startTime && booking.end == slot.endTime) {
-          newSlots[index].status = false
-        }
-      })
+
+      slots.forEach((slot) => {
+        slot.availability.forEach((time) => {
+
+          if (time.startTime === booking.start
+            && time.endTime === booking.end
+            && slot.sportFieldId.toString() === booking.sportField.toString()) {
+
+            map.set(time.startTime + time.endTime,
+              false)
+          } else if (time.startTime === booking.start &&
+            time.endTime === booking.end &&
+            slot.sportFieldId.toString() !== booking.sportField.toString()
+            && sportCenterId.toString() === booking.sportCenter.toString()) {
+            map.set(time.startTime + time.endTime,
+              true)
+          }
+        })
+      }
+      )
+
+
+
     })
   }
+
+  list.forEach(item => {
+    const x = {
+      ...item,
+    }
+    console.log(item);
+    if (map.has(item.startTime + item.endTime))
+      x.available = map.get(item.startTime + item.endTime)
+
+    newSlots.push(x)
+
+  })
   return res.status(201).json({
     status: 201,
     availability: newSlots,
   });
 }
+
 
 const createBookingForUser = asyncHandler(async (req, res) => {
   /* 

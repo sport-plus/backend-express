@@ -28,7 +28,7 @@ const createSportField = async (req, res) => {
   try {
     const newSportField = await SportFields.create(sportField);
     addToSportCenter(sportCenterId, newSportField);
-    
+
     res.status(201).json({
       status: 201,
       message: 'Sport Field created successfully.',
@@ -91,7 +91,24 @@ const addToSportCenter = async (sportCenterId, newSportField) => {
     console.log(error);
   }
 };
-
+const getSportFieldsTypeOfSportCenter = async (req, res) => {
+  const { sportCenterId } = req.query
+  try {
+    const fieldTypes = []
+    const x = (await SportFields.find({ sportCenter: sportCenterId }))
+    x.forEach(field => {
+      if (!fieldTypes.includes(field.fieldType))
+        fieldTypes.push(field.fieldType)
+    })
+    return res.status(201).json({
+      fieldTypes
+    })
+  } catch (error) {
+    return res.status(400).json({
+      message: error.message
+    })
+  }
+}
 const getAllSportFields = asyncHandler(async (req, res) => {
   /* 
     #swagger.tags = ['Sport Field']
@@ -99,7 +116,7 @@ const getAllSportFields = asyncHandler(async (req, res) => {
   */
   try {
     const listSportFields = await SportFields.find();
-    res.status(200).json({
+    return res.status(200).json({
       status: 200,
       results: listSportFields.length,
       listSportFields: listSportFields,
@@ -108,6 +125,7 @@ const getAllSportFields = asyncHandler(async (req, res) => {
     throw new Error(error);
   }
 });
+
 
 const getSportField = asyncHandler(async (req, res) => {
   /* 
@@ -276,4 +294,5 @@ module.exports = {
   deleteSportField,
   blockSportField,
   unBlockSportField,
+  getSportFieldsTypeOfSportCenter
 };

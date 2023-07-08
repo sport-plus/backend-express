@@ -10,6 +10,7 @@ const {
   deleteSportField,
   blockSportField,
   unBlockSportField,
+  getSportFieldsTypeOfSportCenter,
 } = require('../controllers/sportFieldController');
 
 const sportFieldRouter = express.Router();
@@ -19,6 +20,8 @@ sportFieldRouter.use(bodyParser.json());
 sportFieldRouter.route('/').post(authMiddleware, isOwner, createSportField);
 
 sportFieldRouter.route('/').get(authMiddleware, getAllSportFields);
+
+sportFieldRouter.route('/types').get(authMiddleware, getSportFieldsTypeOfSportCenter);
 
 sportFieldRouter
   .route('/:id')
@@ -36,5 +39,6 @@ sportFieldRouter
 sportFieldRouter
   .route('/unblock-sport-field/:id')
   .put(authMiddleware, isOwner, unBlockSportField);
+
 
 module.exports = sportFieldRouter;
