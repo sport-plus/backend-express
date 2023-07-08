@@ -1065,7 +1065,40 @@
           "Sport Center"
         ],
         "description": "Get all sport center for customers",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "sportId",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },  
+          {
+            "name": "fieldType",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
