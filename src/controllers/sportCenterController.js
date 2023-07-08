@@ -5,7 +5,7 @@ const Sports = require('../models/sportModel');
 const DatePrices = require('../models/datePriceModel');
 const SportFields = require('../models/sportFieldModel');
 const Slots = require('../models/slotModel');
-
+const Bookings = require('../models/bookingModel');
 
 const createSportCenter = asyncHandler(async (req, res) => {
   /* 
@@ -38,8 +38,7 @@ const createSportCenter = asyncHandler(async (req, res) => {
     priceOption,
     totalrating,
     status,
-    ratings
-
+    ratings,
   } = req.body;
   const newSportCenterBody = {
     name,
@@ -55,13 +54,11 @@ const createSportCenter = asyncHandler(async (req, res) => {
   };
 
   try {
-
-
     const newSportCenter = await SportCenters.create(newSportCenterBody);
     await addToOwnerAndSport(_id, sportId, newSportCenter);
-    const fields = await createSportFields(newSportCenter.id, priceOption)
-    await addDatePrices(fields, priceOption)
-    await addSlots(fields, priceOption)
+    const fields = await createSportFields(newSportCenter.id, priceOption);
+    await addDatePrices(fields, priceOption);
+    await addSlots(fields, priceOption);
     return res.status(201).json({
       status: 201,
       message: 'Sport Center created successfully.',
@@ -76,63 +73,69 @@ const createSportCenter = asyncHandler(async (req, res) => {
 });
 
 const addSlots = async (fields, priceOption) => {
-  const newSlots = []
+  const newSlots = [];
 
   fields.forEach((field, index) => {
-    const slots = priceOption[index].slots
+    const slots = priceOption[index].slots;
     newSlots.push({
       sportFieldId: field.id,
-      availability: slots
-    })
+      availability: slots,
+    });
   });
 
-  await Slots.insertMany(newSlots)
-}
+  await Slots.insertMany(newSlots);
+};
 
 const addDatePrices = async (fields, priceOption) => {
-  const weeks = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+  const weeks = [
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday',
+    'sunday',
+  ];
 
-  const datePrices = []
+  const datePrices = [];
   fields.forEach((field, index) => {
-    const listPrices = priceOption[index].listPrice
-    listPrices.forEach(listPrice => {
-      let timeStart = listPrice.timeStart
+    const listPrices = priceOption[index].listPrice;
+    listPrices.forEach((listPrice) => {
+      let timeStart = listPrice.timeStart;
       const datePrice = {
         sportFieldId: field.id,
         price: listPrice.price,
-        weekday: weeks[timeStart]
-      }
+        weekday: weeks[timeStart],
+      };
       if (listPrice.timeEnd)
         while (timeStart <= listPrice.timeEnd) {
           datePrices.push({
             ...datePrice,
-            weekday: weeks[timeStart]
-          })
-          timeStart++
+            weekday: weeks[timeStart],
+          });
+          timeStart++;
         }
       else {
-        datePrices.push(datePrice)
+        datePrices.push(datePrice);
       }
     });
-
   });
 
-  await DatePrices.insertMany(datePrices)
-}
+  await DatePrices.insertMany(datePrices);
+};
 
 const createSportFields = async (sportCenterId, priceOption) => {
-  const sportFields = []
-  priceOption.forEach(element => {
+  const sportFields = [];
+  priceOption.forEach((element) => {
     sportFields.push({
       fieldType: element.fieldType,
       sportCenter: sportCenterId,
-      status: true
-    })
+      status: true,
+    });
   });
 
-  return await SportFields.insertMany(sportFields)
-
-}
+  return await SportFields.insertMany(sportFields);
+};
 const addToOwnerAndSport = async (userId, sportId, newSportCenter) => {
   try {
     const user = await Users.findById(userId);
@@ -171,17 +174,99 @@ const addToOwnerAndSport = async (userId, sportId, newSportCenter) => {
 
 // For user
 const getAllSportCenters = asyncHandler(async (req, res) => {
-  /* 
+  const { sportId, address, fieldType, date } = req.query;
+  /*  
     #swagger.tags = ['Sport Center']
     #swagger.description = "Get all sport center for customers"
-  */
+  */ const query = {};
+
+  if (address) {
+    query.address = { $regex: `.*${address}.*`, $options: 'i' };
+  }
+
+  if (sportId) {
+    query.sport = sportId;
+  }
+
   try {
-    const listSportCenter = await SportCenters.find().populate('sport');
-    res.status(200).json({
-      status: 200,
-      results: listSportCenter.length,
-      listSportCenter: listSportCenter,
-    });
+    let sportCenterIds = [];
+
+    if (fieldType) {
+      const sportFields = await SportFields.find({ fieldType: fieldType });
+      sportCenterIds = sportFields.map((sportField) => sportField.sportCenter);
+    }
+    if (sportCenterIds.length === 0) {
+      const listSportCenter = await SportCenters.find(query).populate('sport');
+      if (date) {
+        let listFilterSportCenter = [];
+
+        for (const sportCenter of listSportCenter) {
+          const listSportField = await SportFields.find({
+            sportCenter: sportCenter._id,
+          });
+
+          for (const field of listSportField) {
+            const slots = await Slots.find({
+              sportFieldId: field._id,
+            });
+
+            const bookings = await Bookings.find({
+              $and: [
+                { sportField: field._id },
+                { date: new Date(date).setHours(0, 0, 0, 0) },
+              ],
+            });
+
+            if (bookings.length > 0) {
+              let hasOverlap = false;
+
+              for (const booking of bookings) {
+                for (const slot of slots) {
+                  if (
+                    booking.start === slot.startTime &&
+                    booking.end === slot.endTime
+                  ) {
+                    hasOverlap = true;
+                    break;
+                  }
+                }
+                if (hasOverlap) {
+                  break;
+                }
+              }
+
+              if (!hasOverlap) {
+                listFilterSportCenter.push(sportCenter);
+              }
+            } else {
+              listFilterSportCenter = [...listSportCenter];
+            }
+          }
+        }
+
+        res.status(200).json({
+          status: 200,
+          results: listFilterSportCenter.length,
+          listSportCenter: listFilterSportCenter,
+        });
+      } else {
+        res.status(200).json({
+          status: 200,
+          results: listSportCenter.length,
+          listSportCenter: listSportCenter,
+        });
+      }
+    } else {
+      const listSportCenter = await SportCenters.find({
+        _id: { $in: sportCenterIds },
+        ...query,
+      }).populate('sport');
+      res.status(200).json({
+        status: 200,
+        results: listSportCenter.length,
+        listSportCenter: listSportCenter,
+      });
+    }
   } catch (error) {
     throw new Error(error);
   }
@@ -225,12 +310,22 @@ const getSportCenter = asyncHandler(async (req, res) => {
 
   try {
     const getSportCenter = await SportCenters.findById(id)
-      .populate('sportFields')
       .populate('owner')
       .populate('sport');
+    const getSportField = await SportFields.find({ sportCenter: id });
+    const sportFieldsWithSlots = await Promise.all(
+      getSportField.map(async (sportField) => {
+        const slots = await Slots.find({ sportFieldId: sportField._id });
+        return {
+          ...sportField.toObject(),
+          slots,
+        };
+      })
+    );
     res.status(200).json({
       status: 200,
       getSportCenter: getSportCenter,
+      getSportField: sportFieldsWithSlots,
     });
   } catch (error) {
     throw new Error(error);
@@ -431,12 +526,12 @@ const getSportFieldListByID = asyncHandler(async (req, res) => {
   }
 
   try {
-    const findSportCenter = await SportCenters.findById(sportCenterId).populate(
-      'sportFields'
-    );
+    const findSportField = await SportFields.find({
+      sportCenter: sportCenterId,
+    });
     res.status(200).json({
       status: 200,
-      SportFieldList: findSportCenter.sportFields,
+      SportFieldList: findSportField,
     });
   } catch (error) {
     throw new Error(error);

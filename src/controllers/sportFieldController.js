@@ -1,6 +1,8 @@
 const asyncHandler = require('express-async-handler');
 const SportFields = require('../models/sportFieldModel');
 const SportCenters = require('../models/sportCenterModel');
+const DatePrices = require('../models/datePriceModel');
+const Slots = require('../models/slotModel');
 
 const createSportField = async (req, res) => {
   /* 
@@ -140,9 +142,15 @@ const getSportField = asyncHandler(async (req, res) => {
 
   try {
     const getSportField = await SportFields.findById(id);
+    const getDatePrice =  await DatePrices.find({ sportFieldId: id });
+    const getSlot =  await Slots.find({ sportFieldId: id });
+
+    // console.log(getDatePrice);
     res.status(200).json({
       status: 200,
       getSportField: getSportField,
+      getDatePrice: getDatePrice,
+      getSlot: getSlot
     });
   } catch (error) {
     throw new Error(error);
