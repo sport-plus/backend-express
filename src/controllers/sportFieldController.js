@@ -98,12 +98,36 @@ const getSportFieldsTypeOfSportCenter = async (req, res) => {
   try {
     const fieldTypes = []
     const x = (await SportFields.find({ sportCenter: sportCenterId }))
-    x.forEach(field => {
-      if (!fieldTypes.includes(field.fieldType))
-        fieldTypes.push(field.fieldType)
+
+    x.forEach(i => {
+      if (!fieldTypes.find(field => field.fieldType === i.fieldType) ) {
+        fieldTypes.push({ fieldType: i.fieldType, fieldId: i.id.toString() })
+      }
     })
+    console.log(fieldTypes);
+    const prices = await DatePrices.find({
+      sportFieldId: {
+        "$in": fieldTypes.map(field => field.fieldId)
+      }
+    })
+
+    console.log(prices);
+
+    const types = prices.map(date => {
+      const field = fieldTypes.find(field => field.fieldId === date.sportFieldId.toString());
+      // console.log();
+      if (field) {
+        return {
+          fieldType: field.fieldType,
+          weekday: date.weekday,
+          price: date.price
+        };
+      }
+    });
+
+
     return res.status(201).json({
-      fieldTypes
+      types
     })
   } catch (error) {
     return res.status(400).json({
@@ -142,8 +166,8 @@ const getSportField = asyncHandler(async (req, res) => {
 
   try {
     const getSportField = await SportFields.findById(id);
-    const getDatePrice =  await DatePrices.find({ sportFieldId: id });
-    const getSlot =  await Slots.find({ sportFieldId: id });
+    const getDatePrice = await DatePrices.find({ sportFieldId: id });
+    const getSlot = await Slots.find({ sportFieldId: id });
 
     // console.log(getDatePrice);
     res.status(200).json({
