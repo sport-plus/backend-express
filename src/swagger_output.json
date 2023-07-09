@@ -1792,7 +1792,7 @@
             "description": "Date of the reservation (e.g., '2023-07-06T11:11:54.948Z')"
           },
           {
-            "name": "sportFieldId",
+            "name": "sportCenterId",
             "in": "query",
             "required": true,
             "type": "string",
@@ -1831,7 +1831,7 @@
               "type": "string",
               "format": "date"
             },
-            "sportFieldId": {
+            "sportCenterId": {
               "type": "string"
             },
             "fieldType": {
