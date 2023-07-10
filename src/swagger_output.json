@@ -1068,7 +1068,7 @@
         "parameters": [
           {
             "name": "sportId",
-            "in": "path",
+            "in": "query",
             "required": false,
             "schema": {
               "type": "string"
@@ -1076,7 +1076,7 @@
           },  
           {
             "name": "fieldType",
-            "in": "path",
+            "in": "query",
             "required": false,
             "schema": {
               "type": "string"
@@ -1084,7 +1084,7 @@
           },
           {
             "name": "address",
-            "in": "path",
+            "in": "query",
             "required": false,
             "schema": {
               "type": "string"
@@ -1092,7 +1092,7 @@
           },
           {
             "name": "date",
-            "in": "path",
+            "in": "query",
             "required": false,
             "schema": {
               "type": "string"
