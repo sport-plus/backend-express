@@ -101,29 +101,12 @@ const getSportFieldsTypeOfSportCenter = async (req, res) => {
 
     x.forEach(i => {
       if (!fieldTypes.find(field => field.fieldType === i.fieldType) ) {
-        fieldTypes.push({ fieldType: i.fieldType, fieldId: i.id.toString() })
-      }
-    })
-    console.log(fieldTypes);
-    const prices = await DatePrices.find({
-      sportFieldId: {
-        "$in": fieldTypes.map(field => field.fieldId)
+        fieldTypes.push(i.fieldType)
       }
     })
 
-    console.log(prices);
 
-    const types = prices.map(date => {
-      const field = fieldTypes.find(field => field.fieldId === date.sportFieldId.toString());
-      // console.log();
-      if (field) {
-        return {
-          fieldType: field.fieldType,
-          weekday: date.weekday,
-          price: date.price
-        };
-      }
-    });
+  
 
 
     return res.status(201).json({
