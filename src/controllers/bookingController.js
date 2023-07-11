@@ -33,7 +33,7 @@ const validateDateBooking = async (req, res, next) => {
 const bookingsAvailable = async (req, res) => {
   const { sportCenterId, fieldType, date } = req.query
 
-
+  
 
   const sportFields = (await SportFields.find({
     $and: [
@@ -41,6 +41,8 @@ const bookingsAvailable = async (req, res) => {
       { fieldType }
     ]
   })).map(field => field.id)
+
+  console.log(sportFields);
   const slots = await Slots.find({
     sportFieldId: {
       "$in": sportFields
@@ -65,15 +67,14 @@ const bookingsAvailable = async (req, res) => {
   })) || []
   const map = new Map();
 
-  console.log(list, slots, bookings);
   const dateFormat = moment(date);
   const weekday = dateFormat.format('dddd');
-
-  const datePrice = await DatePrices.find({
+  console.log(weekday,sportFields[0]);
+  const datePrice = (await DatePrices.find({
     $and: [{
       sportFieldId: sportFields[0]
     }, { weekday: weekday.toLowerCase() }]
-  })
+  })).map((date) => date.price)
 
   console.log(datePrice);
   if (bookings.length > 0) {
@@ -120,7 +121,7 @@ const bookingsAvailable = async (req, res) => {
   return res.status(201).json({
     status: 201,
     availability: newSlots,
-    price: datePrice[0].price
+    price: datePrice
   });
 }
 
