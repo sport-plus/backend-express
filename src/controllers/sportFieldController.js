@@ -110,7 +110,7 @@ const getSportFieldsTypeOfSportCenter = async (req, res) => {
 
 
     return res.status(201).json({
-      types
+      fieldTypes
     })
   } catch (error) {
     return res.status(400).json({
