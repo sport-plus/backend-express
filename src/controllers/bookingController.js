@@ -5,7 +5,8 @@ const Users = require('../models/userModel');
 const SportFields = require('../models/sportFieldModel');
 const Slots = require('../models/slotModel');
 const morgan = require('morgan');
-
+const moment = require('moment');
+const DatePrices = require('../models/datePriceModel');
 
 const validateDateBooking = async (req, res, next) => {
   const { date, start, end, sportFieldId } = req.query
@@ -65,7 +66,16 @@ const bookingsAvailable = async (req, res) => {
   const map = new Map();
 
   console.log(list, slots, bookings);
+  const dateFormat = moment(date);
+  const weekday = dateFormat.format('dddd');
 
+  const datePrice = await DatePrices.find({
+    $and: [{
+      sportFieldId: sportFields[0]
+    }, { weekday: weekday.toLowerCase() }]
+  })
+
+  console.log(datePrice);
   if (bookings.length > 0) {
 
     bookings.forEach((booking) => {
@@ -95,6 +105,7 @@ const bookingsAvailable = async (req, res) => {
     })
   }
 
+
   list.forEach(item => {
     const x = {
       ...item,
@@ -109,6 +120,7 @@ const bookingsAvailable = async (req, res) => {
   return res.status(201).json({
     status: 201,
     availability: newSlots,
+    price: datePrice[0].price
   });
 }
 
