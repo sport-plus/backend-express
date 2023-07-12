@@ -206,8 +206,13 @@ const loginAdmin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   //check id user exits or not
   const findAdmin = await Users.findOne({ email: email }).populate('role');
-  console.log("x", findAdmin);
-  if (findAdmin.role.name !== 'admin') throw new Error('Not Authorized');
+  console.log('x', findAdmin);
+  if (findAdmin.role.name !== 'admin') {
+    res.status(403).json({
+      status: 403,
+      message: 'Not Authorized!',
+    });
+  }
   if (findAdmin && (await findAdmin.isPasswordMatched(password))) {
     const refreshToken = await generateRefreshToken(findAdmin?._id);
 
@@ -373,7 +378,11 @@ const updateUser = asyncHandler(async (req, res) => {
       userUpdated: userUpdated,
     });
   } catch (error) {
-    throw new Error(error);
+    res.status(400).json({
+      status: 400,
+      error: error,
+      message: 'Something went wrong!',
+    });
   }
 });
 
