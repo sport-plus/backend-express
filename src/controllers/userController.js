@@ -326,7 +326,10 @@ const getUser = asyncHandler(async (req, res) => {
   }
 
   try {
-    const user = await Users.findById(id);
+    const user = await Users.findById(id)
+      .populate('role', 'name')
+      .populate('bookingforUser')
+      .populate('bookingforOwner');
     res.status(200).json({
       status: 200,
       user: user,
@@ -463,7 +466,7 @@ const forgotPasswordToken = asyncHandler(async (req, res) => {
   try {
     const token = await user.createPasswordResetToken();
     await user.save();
-    const resetURL = `Hi, Please follow this link to reset Your Password. This link is valid till 10 minutes from now. <a href="http://localhost:7000/api/user/reset-password/${token}">Click here</a>`;
+    const resetURL = `Hi, Please follow this link to reset Your Password. This link is valid till 10 minutes from now. <a href="https://thethaoplus.vercel.app/user/reset-password/${token}">Click here</a>`;
     const data = {
       to: email,
       text: 'Hello user',
