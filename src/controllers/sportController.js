@@ -105,6 +105,7 @@ const blockSport = asyncHandler(async (req, res) => {
       status: 400,
       message: 'Sport is being used. Can not block!',
     });
+    return;
   }
 
   try {
@@ -164,6 +165,7 @@ const deleteSport = asyncHandler(async (req, res) => {
       status: 400,
       message: 'Sport is being used. Can not delete!',
     });
+    return;
   }
 
   try {
