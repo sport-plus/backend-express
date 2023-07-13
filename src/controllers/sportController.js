@@ -95,9 +95,16 @@ const blockSport = asyncHandler(async (req, res) => {
     #swagger.description = "Update sport status by ID - Block sport"
   */
   const { id } = req.params;
-  let isValid = await Sports.findById(id);
-  if (!isValid) {
+  let isValidSport = await Sports.findById(id);
+  if (!isValidSport) {
     throw new Error('Sport id is not valid or not found');
+  }
+  const sportCenterLength = isValidSport.sportCenters.length;
+  if (sportCenterLength > 0) {
+    res.status(400).json({
+      status: 400,
+      message: 'Sport is being used. Can not block!',
+    });
   }
 
   try {
@@ -147,9 +154,16 @@ const deleteSport = asyncHandler(async (req, res) => {
     #swagger.description = "Delete sport by ID"
   */
   const { id } = req.params;
-  let isValid = await Sports.findById(id);
-  if (!isValid) {
+  let isValidSport = await Sports.findById(id);
+  if (!isValidSport) {
     throw new Error('Sport id is not valid or not found');
+  }
+  const sportCenterLength = isValidSport.sportCenters.length;
+  if (sportCenterLength > 0) {
+    res.status(400).json({
+      status: 400,
+      message: 'Sport is being used. Can not delete!',
+    });
   }
 
   try {
