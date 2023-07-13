@@ -404,11 +404,21 @@ const updatePassword = asyncHandler(async (req, res) => {
   const isPasswordMatched = await user.isPasswordMatched(oldPassword);
 
   if (!isPasswordMatched) {
-    throw new Error('Old password is incorrect');
+    res.status(400).json({
+      status: 400,
+      error: error,
+      message: 'Old password is incorrect',
+    });
+    return;
   }
 
   if (password !== confirmPassword) {
-    throw new Error('Confirm password does not match');
+    res.status(400).json({
+      status: 400,
+      error: error,
+      message: 'Confirm password does not match',
+    });
+    return;
   }
 
   if (password) {
