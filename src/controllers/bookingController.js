@@ -33,7 +33,7 @@ const validateDateBooking = async (req, res, next) => {
 const bookingsAvailable = async (req, res) => {
   const { sportCenterId, fieldType, date } = req.query
 
-  
+
 
   const sportFields = (await SportFields.find({
     $and: [
@@ -69,7 +69,7 @@ const bookingsAvailable = async (req, res) => {
 
   const dateFormat = moment(date);
   const weekday = dateFormat.format('dddd');
-  console.log(weekday,sportFields[0]);
+  console.log(weekday, sportFields[0]);
   const datePrice = (await DatePrices.find({
     $and: [{
       sportFieldId: sportFields[0]
@@ -141,10 +141,11 @@ const createBookingForUser = asyncHandler(async (req, res) => {
   */
 
   const { _id } = req.user;
+  console.log(_id);
   const {
-    ownerCenterId: owner,
-    sportCenterId: sportCenter,
-    sportFieldId: sportField,
+    ownerCenterId,
+    sportCenterId,
+    sportFieldId,
     totalPrice,
     deposit,
     start,
@@ -152,25 +153,12 @@ const createBookingForUser = asyncHandler(async (req, res) => {
     date
   } = req.body;
 
-  let isValidUser = await Users.findById(owner);
-  if (!isValidUser) {
-    throw new Error('Owner id is not valid or not found');
-  }
 
-  let isValidSportCenter = await SportCenters.findById(sportCenter);
-  if (!isValidSportCenter) {
-    throw new Error('Sport Center id is not valid or not found');
-  }
-
-  let isValidSportField = await SportFields.findById(sportField);
-  if (!isValidSportField) {
-    throw new Error('Sport Field id is not valid or not found');
-  }
 
   const newBookingBody = {
-    owner,
-    sportCenter,
-    sportField,
+    ownerCenterId,
+    sportCenterId,
+    sportFieldId,
     totalPrice,
     deposit,
     start,
@@ -179,15 +167,33 @@ const createBookingForUser = asyncHandler(async (req, res) => {
   };
 
   try {
+
+    let isValidUser = await Users.findById(ownerCenterId);
+    if (!isValidUser) {
+      throw new Error('Owner id is not valid or not found');
+    }
+
+    let isValidSportCenter = await SportCenters.findById(sportCenterId);
+    if (!isValidSportCenter) {
+      throw new Error('Sport Center id is not valid or not found');
+    }
+
+    let isValidSportField = await SportFields.findById(sportFieldId);
+    if (!isValidSportField) {
+      throw new Error('Sport Field id is not valid or not found');
+    }
     const newBooking = await Bookings.create(newBookingBody);
     addToUserBooking(_id, newBooking);
-    res.status(201).json({
+    return res.status(201).json({
       status: 201,
       message: 'Sport Field created successfully.',
       newBooking: newBooking,
     });
   } catch (error) {
-    throw new Error(error);
+    return res.status(400).json({
+      status: 400,
+      message: error.message,
+    });
   }
 });
 
