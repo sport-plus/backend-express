@@ -73,10 +73,8 @@ const updateSport = asyncHandler(async (req, res) => {
     throw new Error('Sport id is not valid or not found');
   }
 
-  const imageDefault =
-    'https://firebasestorage.googleapis.com/v0/b/thethaoplus-4d4e2.appspot.com/o/sport.png?alt=media&token=2d2c6703-5121-4242-9841-3b41fa9eaba1';
   const { image, name } = req.body;
-  const newSportBody = { image: image ? image : imageDefault, name: name };
+  const newSportBody = { image: image, name: name };
   try {
     const updateSport = await Sports.findByIdAndUpdate(id, newSportBody, {
       new: true,
@@ -97,9 +95,17 @@ const blockSport = asyncHandler(async (req, res) => {
     #swagger.description = "Update sport status by ID - Block sport"
   */
   const { id } = req.params;
-  let isValid = await Sports.findById(id);
-  if (!isValid) {
+  let isValidSport = await Sports.findById(id);
+  if (!isValidSport) {
     throw new Error('Sport id is not valid or not found');
+  }
+  const sportCenterLength = isValidSport.sportCenters.length;
+  if (sportCenterLength > 0) {
+    res.status(400).json({
+      status: 400,
+      message: 'Sport is being used. Can not block!',
+    });
+    return;
   }
 
   try {
@@ -149,9 +155,17 @@ const deleteSport = asyncHandler(async (req, res) => {
     #swagger.description = "Delete sport by ID"
   */
   const { id } = req.params;
-  let isValid = await Sports.findById(id);
-  if (!isValid) {
+  let isValidSport = await Sports.findById(id);
+  if (!isValidSport) {
     throw new Error('Sport id is not valid or not found');
+  }
+  const sportCenterLength = isValidSport.sportCenters.length;
+  if (sportCenterLength > 0) {
+    res.status(400).json({
+      status: 400,
+      message: 'Sport is being used. Can not delete!',
+    });
+    return;
   }
 
   try {

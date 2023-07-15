@@ -206,8 +206,13 @@ const loginAdmin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   //check id user exits or not
   const findAdmin = await Users.findOne({ email: email }).populate('role');
-  console.log("x", findAdmin);
-  if (findAdmin.role.name !== 'admin') throw new Error('Not Authorized');
+  console.log('x', findAdmin);
+  if (findAdmin.role.name !== 'admin') {
+    res.status(403).json({
+      status: 403,
+      message: 'Not Authorized!',
+    });
+  }
   if (findAdmin && (await findAdmin.isPasswordMatched(password))) {
     const refreshToken = await generateRefreshToken(findAdmin?._id);
 
@@ -321,7 +326,11 @@ const getUser = asyncHandler(async (req, res) => {
   }
 
   try {
-    const user = await Users.findById(id);
+    const user = await Users.findById(id)
+      .populate('role', 'name')
+      .populate('bookingforUser')
+      .populate('bookingforOwner')
+      .populate('sportCenters');
     res.status(200).json({
       status: 200,
       user: user,
@@ -373,7 +382,11 @@ const updateUser = asyncHandler(async (req, res) => {
       userUpdated: userUpdated,
     });
   } catch (error) {
-    throw new Error(error);
+    res.status(400).json({
+      status: 400,
+      error: error,
+      message: 'Something went wrong!',
+    });
   }
 });
 
@@ -393,10 +406,22 @@ const updatePassword = asyncHandler(async (req, res) => {
 
   if (!isPasswordMatched) {
     throw new Error('Old password is incorrect');
+    // res.status(400).json({
+    //   status: 400,
+    //   error: error,
+    //   message: 'Old password is incorrect',
+    // });
+    // return;
   }
 
   if (password !== confirmPassword) {
     throw new Error('Confirm password does not match');
+    // res.status(400).json({
+    //   status: 400,
+    //   error: error,
+    //   message: 'Confirm password does not match',
+    // });
+    // return;
   }
 
   if (password) {
@@ -454,7 +479,7 @@ const forgotPasswordToken = asyncHandler(async (req, res) => {
   try {
     const token = await user.createPasswordResetToken();
     await user.save();
-    const resetURL = `Hi, Please follow this link to reset Your Password. This link is valid till 10 minutes from now. <a href="http://localhost:7000/api/user/reset-password/${token}">Click here</a>`;
+    const resetURL = `Hi, Please follow this link to reset Your Password. This link is valid till 10 minutes from now. <a href="https://thethaoplus.vercel.app/user/reset-password/${token}">Click here</a>`;
     const data = {
       to: email,
       text: 'Hello user',
