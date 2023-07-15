@@ -329,7 +329,8 @@ const getUser = asyncHandler(async (req, res) => {
     const user = await Users.findById(id)
       .populate('role', 'name')
       .populate('bookingforUser')
-      .populate('bookingforOwner');
+      .populate('bookingforOwner')
+      .populate('sportCenters');
     res.status(200).json({
       status: 200,
       user: user,
