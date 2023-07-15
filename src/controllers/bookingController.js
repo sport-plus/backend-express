@@ -34,7 +34,7 @@ const bookingsAvailable = async (req, res) => {
   const { sportCenterId, fieldType, date } = req.query
 
 
-
+  let sportFieldAvailable = ''
   const sportFields = (await SportFields.find({
     $and: [
       { sportCenter: sportCenterId },
@@ -76,6 +76,7 @@ const bookingsAvailable = async (req, res) => {
     }, { weekday: weekday.toLowerCase() }]
   })).map((date) => date.price)
 
+
   console.log(datePrice);
   if (bookings.length > 0) {
 
@@ -96,6 +97,7 @@ const bookingsAvailable = async (req, res) => {
             && sportCenterId.toString() === booking.sportCenter.toString()) {
             map.set(time.startTime + time.endTime,
               true)
+            sportFieldAvailable = slot.sportFieldId.toString()
           }
         })
       }
@@ -118,8 +120,15 @@ const bookingsAvailable = async (req, res) => {
     newSlots.push(x)
 
   })
+
+  if (sportFieldAvailable === '') return res.status(400).json({
+    status: 400,
+    message: 'not have sport field available'
+  });
+
   return res.status(201).json({
     status: 201,
+    sportFieldId: sportFieldAvailable,
     availability: newSlots,
     price: datePrice
   });
