@@ -42,7 +42,6 @@ const bookingsAvailable = async (req, res) => {
     ]
   })).map(field => field.id)
 
-  console.log(sportFields);
   const slots = await Slots.find({
     sportFieldId: {
       "$in": sportFields
@@ -69,7 +68,6 @@ const bookingsAvailable = async (req, res) => {
 
   const dateFormat = moment(date);
   const weekday = dateFormat.format('dddd');
-  console.log(weekday, sportFields[0]);
   const datePrice = (await DatePrices.find({
     $and: [{
       sportFieldId: sportFields[0]
@@ -77,7 +75,8 @@ const bookingsAvailable = async (req, res) => {
   })).map((date) => date.price)
 
 
-  console.log(datePrice);
+  sportFieldAvailable = sportFields[0]
+
   if (bookings.length > 0) {
 
     bookings.forEach((booking) => {
@@ -88,6 +87,7 @@ const bookingsAvailable = async (req, res) => {
           if (time.startTime === booking.start
             && time.endTime === booking.end
             && slot.sportFieldId.toString() === booking.sportField.toString()) {
+
 
             map.set(time.startTime + time.endTime,
               false)
@@ -113,7 +113,6 @@ const bookingsAvailable = async (req, res) => {
     const x = {
       ...item,
     }
-    console.log(item);
     if (map.has(item.startTime + item.endTime))
       x.available = map.get(item.startTime + item.endTime)
 
@@ -121,6 +120,7 @@ const bookingsAvailable = async (req, res) => {
 
   })
 
+  console.log(sportFieldAvailable);
   if (sportFieldAvailable === '') return res.status(400).json({
     status: 400,
     message: 'not have sport field available'
@@ -150,7 +150,6 @@ const createBookingForUser = asyncHandler(async (req, res) => {
   */
 
   const { _id } = req.user;
-  console.log(_id);
   const {
     ownerCenterId,
     sportCenterId,
