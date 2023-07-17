@@ -9,11 +9,7 @@ const sportCenterSchema = new Schema(
       required: true,
       unique: true,
     },
-    image: {
-      type: String,
-      default:
-        'https://firebasestorage.googleapis.com/v0/b/thethaoplus-4d4e2.appspot.com/o/sport_center.png?alt=media&token=50735feb-b144-4ae1-86c9-c47b955ae25a',
-    },
+    image: [],
     address: {
       type: String,
       required: true,
