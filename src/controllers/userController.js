@@ -487,9 +487,17 @@ const forgotPasswordToken = asyncHandler(async (req, res) => {
       html: resetURL,
     };
     sendEmail(data);
-    res.json(token);
+    res.status(202).json({
+      status: 202,
+      message: 'Email has been sent. Check your email!',
+      token: token,
+    });
   } catch (error) {
-    throw new Error(error);
+    res.status(400).json({
+      status: 400,
+      message: 'Email sent fail!',
+    });
+    // throw new Error(error);
   }
 });
 
