@@ -104,7 +104,7 @@ const addDatePrices = async (fields, priceOption) => {
       let timeStart = listPrice.timeStart;
       const datePrice = {
         sportFieldId: field.id,
-        price: listPrice.price,
+        price: Number(listPrice.price),
         weekday: weeks[timeStart],
       };
       if (listPrice.timeEnd)
