@@ -204,6 +204,8 @@ const createBookingForUser = asyncHandler(async (req, res) => {
     const newBooking = await Bookings.create(newBookingBody);
     console.log();
     addToUserBooking(_id, newBooking);
+    addToOwnerBooking(ownerCenterId, newBooking);
+
     return res.status(201).json({
       status: 201,
       message: 'Sport Field created successfully.',
@@ -357,12 +359,27 @@ const getAllBookingForOwner = asyncHandler(async (req, res) => {
     throw new Error('User id is not valid or not found');
   }
   try {
-    const bookingOfOwner = await Bookings.find({ owner: _id })
-      .populate(
-        'sportCenter',
-        'name image address latitude longtitude openTime closeTime status'
-      )
-      .populate('sportField', 'name price fieldType status');
+    const bookingOfOwner = await Users.findById(_id)
+    .populate({
+      path: 'bookingforOwner',
+      populate: [
+        {
+          path: 'sportCenter',
+          select: 'name image address latitude longtitude openTime closeTime status',
+        },
+        {
+          path: 'sportField',
+          select: 'name price fieldType status',
+        },
+      ],
+    });
+    // const bookingOfOwner = await Bookings.find({ owner: _id })
+    //   .populate(
+    //     'sportCenter',
+    //     'name image address latitude longtitude openTime closeTime status'
+    //   )
+    //   .populate('sportField', 'name price fieldType status');
+
     const bookingCalendar = await Bookings.find(
       { owner: _id },
       'start end sportField sportCenter'
@@ -377,7 +394,7 @@ const getAllBookingForOwner = asyncHandler(async (req, res) => {
     res.status(200).json({
       status: 200,
       results: bookingOfOwner.length,
-      bookingOfOwner: bookingOfOwner,
+      bookingOfOwner: bookingOfOwner.bookingforOwner,
       bookings: bookingCalendar,
     });
   } catch (error) {
