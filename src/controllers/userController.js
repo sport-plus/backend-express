@@ -479,7 +479,7 @@ const forgotPasswordToken = asyncHandler(async (req, res) => {
   try {
     const token = await user.createPasswordResetToken();
     await user.save();
-    const resetURL = `Hi, Please follow this link to reset Your Password. This link is valid till 10 minutes from now. <a href="https://thethaoplus.vercel.app/user/reset-password/${token}">Click here</a>`;
+    const resetURL = `Hi, Please follow this link to reset Your Password. This link is valid till 10 minutes from now. <a href="https://thethaoplus.vercel.app/reset-password/${token}">Click here</a>`;
     const data = {
       to: email,
       text: 'Hello user',
@@ -487,9 +487,17 @@ const forgotPasswordToken = asyncHandler(async (req, res) => {
       html: resetURL,
     };
     sendEmail(data);
-    res.json(token);
+    res.status(202).json({
+      status: 202,
+      message: 'Email has been sent. Check your email!',
+      token: token,
+    });
   } catch (error) {
-    throw new Error(error);
+    res.status(400).json({
+      status: 400,
+      message: 'Email sent fail!',
+    });
+    // throw new Error(error);
   }
 });
 
