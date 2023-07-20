@@ -7,6 +7,25 @@ const SportFields = require('../models/sportFieldModel');
 const Slots = require('../models/slotModel');
 const Bookings = require('../models/bookingModel');
 
+
+const getListPrice = async (req, res, next) => {
+  const {sportCenterId} = req.query
+  try {
+    const sportFields = await SportFields.find({sportCenter: sportCenterId});
+ 
+   
+    return res.status(201).json({
+      status: 201,
+      message: 'Sport Center created successfully.',
+    });
+  } catch (error) {
+    return res.status(400).json({
+      status: 400,
+      message: error.message,
+    });
+  }
+}
+
 const createSportCenter = asyncHandler(async (req, res) => {
   /* 
     #swagger.tags = ['Sport Center']
@@ -51,8 +70,9 @@ const createSportCenter = asyncHandler(async (req, res) => {
     closeTime,
     owner: _id,
     sport: sportId,
+    priceOption
   };
-
+console.log(priceOption);
   try {
     const newSportCenter = await SportCenters.create(newSportCenterBody);
     await addToOwnerAndSport(_id, sportId, newSportCenter);
@@ -134,6 +154,7 @@ const addDatePrices = async (fields, priceOption) => {
 
   await DatePrices.insertMany(datePrices);
 };
+
 
 const createSportFields = async (sportCenterId, priceOption) => {
   const sportFields = [];

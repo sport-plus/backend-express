@@ -2,6 +2,47 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
+const priceSchema = new mongoose.Schema({
+  timeStart: {
+    type: Number,
+    required: true,
+  },
+  timeEnd: {
+    type: Number,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+});
+const slotsSchema = new mongoose.Schema({
+  startTime: {
+    type: String,
+    required: true,
+  },
+  endTime: {
+    type: String,
+    required: true,
+  },
+});
+const priceOptionSchema = new mongoose.Schema({
+  fieldType: {
+    type: String,
+    required: true,
+  },
+  quantity: {
+    type: Number,
+    required: true,
+  },
+  listPrice: {
+    type: [priceSchema],
+    required: true,
+  },
+  slots: {
+    type: [slotsSchema],
+    required: true,
+  },
+});
 const sportCenterSchema = new Schema(
   {
     name: {
@@ -63,6 +104,11 @@ const sportCenterSchema = new Schema(
       ref: 'sports',
       require: true,
     },
+    priceOption: {
+      type: [priceOptionSchema],
+      required: true,
+    },
+    
   },
   { timestamps: true }
 );
