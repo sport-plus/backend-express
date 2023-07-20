@@ -164,9 +164,9 @@ const createBookingForUser = asyncHandler(async (req, res) => {
 
 
   const newBookingBody = {
-    ownerCenterId,
-    sportCenterId,
-    sportFieldId,
+    ownerCenter: ownerCenterId,
+    sportCenter: sportCenterId,
+    sportField: sportFieldId,
     totalPrice,
     deposit,
     start,
@@ -191,6 +191,7 @@ const createBookingForUser = asyncHandler(async (req, res) => {
       throw new Error('Sport Field id is not valid or not found');
     }
     const newBooking = await Bookings.create(newBookingBody);
+    console.log();
     addToUserBooking(_id, newBooking);
     return res.status(201).json({
       status: 201,
@@ -312,7 +313,14 @@ const getHistoryBooking = asyncHandler(async (req, res) => {
     throw new Error('User id is not valid or not found');
   }
   try {
-    const bookingHistory = await Users.findById(_id).populate('bookingforUser');
+    const bookingHistory = await Users.findById(_id).populate({
+      path: 'bookingforUser',
+      // populate: {
+      //   path: 'sportCenter',
+      // },
+    })
+
+
     res.status(200).json({
       status: 200,
       results: bookingHistory.length,
