@@ -5,7 +5,6 @@ const Schema = mongoose.Schema;
 const priceSchema = new mongoose.Schema({
   timeStart: {
     type: Number,
-    required: true,
   },
   timeEnd: {
     type: Number,
@@ -18,11 +17,9 @@ const priceSchema = new mongoose.Schema({
 const slotsSchema = new mongoose.Schema({
   startTime: {
     type: String,
-    required: true,
   },
   endTime: {
     type: String,
-    required: true,
   },
 });
 const priceOptionSchema = new mongoose.Schema({
