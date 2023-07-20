@@ -75,12 +75,17 @@ const createSportCenter = asyncHandler(async (req, res) => {
 const addSlots = async (fields, priceOption) => {
   const newSlots = [];
 
-  fields.forEach((field, index) => {
-    const slots = priceOption[index].slots;
-    newSlots.push({
-      sportFieldId: field.id,
-      availability: slots,
-    });
+  priceOption.forEach((price, index) => {
+    const slots = price.slots;
+    fields.forEach((field, slot) => {
+      if (price.fieldType === field.fieldType) {
+        newSlots.push({
+          sportFieldId: field.id,
+          availability: slots,
+        });
+      }
+    })
+
   });
 
   await Slots.insertMany(newSlots);
@@ -98,27 +103,33 @@ const addDatePrices = async (fields, priceOption) => {
   ];
 
   const datePrices = [];
-  fields.forEach((field, index) => {
-    const listPrices = priceOption[index].listPrice;
+  priceOption.forEach((price, index) => {
+    const listPrices = price.listPrice;
     listPrices.forEach((listPrice) => {
       let timeStart = listPrice.timeStart;
-      const datePrice = {
-        sportFieldId: field.id,
-        price: listPrice.price,
-        weekday: weeks[timeStart],
-      };
-      if (listPrice.timeEnd)
-        while (timeStart <= listPrice.timeEnd) {
-          datePrices.push({
-            ...datePrice,
+      fields.forEach((field) => {
+        if (price.fieldType === field.fieldType) {
+          const datePrice = {
+            sportFieldId: field.id,
+            price: listPrice.price,
             weekday: weeks[timeStart],
-          });
-          timeStart++;
+          };
+          if (listPrice.timeEnd)
+            while (timeStart <= listPrice.timeEnd) {
+              datePrices.push({
+                ...datePrice,
+                weekday: weeks[timeStart],
+              });
+              timeStart++;
+            }
+          else {
+            datePrices.push(datePrice);
+          }
         }
-      else {
-        datePrices.push(datePrice);
-      }
+      })
+
     });
+
   });
 
   await DatePrices.insertMany(datePrices);
@@ -126,12 +137,18 @@ const addDatePrices = async (fields, priceOption) => {
 
 const createSportFields = async (sportCenterId, priceOption) => {
   const sportFields = [];
+  console.log(priceOption);
   priceOption.forEach((element) => {
-    sportFields.push({
-      fieldType: element.fieldType,
-      sportCenter: sportCenterId,
-      status: true,
-    });
+    if (element.quantity >= 1) {
+      for (let index = 1; index <= element.quantity; index++) {
+        sportFields.push({
+          fieldType: element.fieldType,
+          sportCenter: sportCenterId,
+          status: true,
+          index
+        })
+      }
+    }
   });
 
   return await SportFields.insertMany(sportFields);
@@ -312,6 +329,7 @@ const getSportCenter = asyncHandler(async (req, res) => {
     const getSportCenter = await SportCenters.findById(id)
       .populate('owner')
       .populate('sport');
+    console.log(getSportCenter);
     const getSportField = await SportFields.find({ sportCenter: id });
     const sportFieldsWithSlots = await Promise.all(
       getSportField.map(async (sportField) => {
