@@ -120,7 +120,6 @@ const bookingsAvailable = async (req, res) => {
 
   })
 
-  console.log(sportFieldAvailable);
   if (sportFieldAvailable === '') return res.status(400).json({
     status: 400,
     message: 'not have sport field available'
@@ -171,10 +170,22 @@ const createBookingForUser = asyncHandler(async (req, res) => {
     deposit,
     start,
     end,
-    date: new Date(date)
+    date: new Date(date).setHours(0, 0, 0, 0)
   };
 
   try {
+    const bookings = await Bookings.find({
+      $and: [
+        { sportField: sportFieldId },
+        { start },
+        { end },
+        { date: new Date(date).setHours(0, 0, 0, 0) },
+      ]
+    })
+    if (bookings.length > 0) return res.status(400).json({
+      message: 'this time already booking'
+    })
+
 
     let isValidUser = await Users.findById(ownerCenterId);
     if (!isValidUser) {
@@ -315,9 +326,12 @@ const getHistoryBooking = asyncHandler(async (req, res) => {
   try {
     const bookingHistory = await Users.findById(_id).populate({
       path: 'bookingforUser',
-      // populate: {
-      //   path: 'sportCenter',
-      // },
+      populate: [{
+        path: 'sportCenter',
+      }, {
+        path: 'sportField',
+      }],
+
     })
 
 
