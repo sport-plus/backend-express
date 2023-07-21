@@ -21,7 +21,10 @@ const validateDateBooking = async (req, res, next) => {
       { tracking: 'Pending' },
       { date: new Date(date).setHours(0, 0, 0, 0) },
     ]
-  }).populate({ path: 'sportField' }, { fieldType })
+  }).populate({
+    path: 'sportField',
+    match: { fieldType },
+  })
   if (sportFields.length === bookings.length) return res.status(400).json({
     message: 'this time not available'
   })
@@ -94,7 +97,10 @@ const bookingsAvailable = async (req, res) => {
             { tracking: 'Pending' },
             { date: new Date(date).setHours(0, 0, 0, 0) },
           ]
-        }).populate({ path: 'sportField' }, { fieldType })
+        }).populate({
+          path: 'sportField',
+          match: { fieldType },
+        })
         if (sportFields.length === x.length) {
 
           map.set(time.startTime + time.endTime,
@@ -180,7 +186,7 @@ const createBookingForUser = asyncHandler(async (req, res) => {
 
   try {
     const sportFields = (await SportFields.find({ $and: [{ sportCenter: sportCenterId }, { fieldType }] })).map(field => field.id)
-
+    console.log(sportFields);
     const bookings = await Bookings.find({
       $and: [
         { start },
@@ -189,7 +195,12 @@ const createBookingForUser = asyncHandler(async (req, res) => {
         { tracking: 'Pending' },
         { date: new Date(date).setHours(0, 0, 0, 0) },
       ]
-    }).populate({ path: 'sportField' }, { fieldType })
+    }).populate({
+      path: 'sportField',
+      match: { fieldType },
+    })
+    console.log(sportFieldId);
+
     if (sportFields.length === bookings.length) return res.status(400).json({
       message: 'this time not available'
     })
