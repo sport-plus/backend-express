@@ -9,9 +9,13 @@ const moment = require('moment');
 const DatePrices = require('../models/datePriceModel');
 
 const validateDateBooking = async (req, res, next) => {
-  const { date, start, end, sportCenterId, fieldType } = req.query
+  const { date, start, end, sportCenterId, fieldType } = req.query;
 
-  const sportFields = (await SportFields.find({ $and: [{ sportCenter: sportCenterId }, { fieldType }] })).map(field => field.id)
+  const sportFields = (
+    await SportFields.find({
+      $and: [{ sportCenter: sportCenterId }, { fieldType }],
+    })
+  ).map((field) => field.id);
 
   const bookings = await Bookings.find({
     $and: [
@@ -30,63 +34,61 @@ const validateDateBooking = async (req, res, next) => {
   })
 
   return res.status(200).json({
-    message: "Ok"
-  })
-}
-
-
+    message: 'Ok',
+  });
+};
 
 const bookingsAvailable = async (req, res) => {
-  const { sportCenterId, fieldType, date } = req.query
+  const { sportCenterId, fieldType, date } = req.query;
 
-
-  let sportFieldAvailable = ''
-  const sportFields = (await SportFields.find({
-    $and: [
-      { sportCenter: sportCenterId },
-      { fieldType }
-    ]
-  })).map(field => field.id)
+  let sportFieldAvailable = '';
+  const sportFields = (
+    await SportFields.find({
+      $and: [{ sportCenter: sportCenterId }, { fieldType }],
+    })
+  ).map((field) => field.id);
 
   const slots = await Slots.find({
     sportFieldId: {
-      "$in": sportFields
-    }
-  })
+      $in: sportFields,
+    },
+  });
   const bookings = await Bookings.find({
     $and: [
       {
         sportField: {
-          "$in": sportFields
-        }
+          $in: sportFields,
+        },
       },
       { date: new Date(date).setHours(0, 0, 0, 0) },
-    ]
-  })
+    ],
+  });
 
-
-
-  const newSlots = []
-  const list = slots[0]?.availability.map((slot, index) => ({
-    startTime: slot.startTime,
-    endTime: slot.endTime,
-    available: true,
-  })) || []
+  const newSlots = [];
+  const list =
+    slots[0]?.availability.map((slot, index) => ({
+      startTime: slot.startTime,
+      endTime: slot.endTime,
+      available: true,
+    })) || [];
   const map = new Map();
 
   const dateFormat = moment(date);
   const weekday = dateFormat.format('dddd');
-  const datePrice = (await DatePrices.find({
-    $and: [{
-      sportFieldId: sportFields[0]
-    }, { weekday: weekday.toLowerCase() }]
-  })).map((date) => date.price)
+  const datePrice = (
+    await DatePrices.find({
+      $and: [
+        {
+          sportFieldId: sportFields[0],
+        },
+        { weekday: weekday.toLowerCase() },
+      ],
+    })
+  ).map((date) => date.price);
 
-
-  sportFieldAvailable = sportFields[0]
+  sportFieldAvailable = sportFields[0];
 
   if (bookings.length > 0) {
-
     slots.forEach((slot) => {
       slot.availability.forEach(async (time) => {
         const x = await Bookings.find({
@@ -102,44 +104,38 @@ const bookingsAvailable = async (req, res) => {
           match: { fieldType },
         })
         if (sportFields.length === x.length) {
-
-          map.set(time.startTime + time.endTime,
-            false)
+          map.set(time.startTime + time.endTime, false);
         } else {
-          map.set(time.startTime + time.endTime,
-            true)
-          sportFieldAvailable = slot.sportFieldId.toString()
+          map.set(time.startTime + time.endTime, true);
+          sportFieldAvailable = slot.sportFieldId.toString();
         }
-      })
-    }
-    )
+      });
+    });
   }
 
-
-  list.forEach(item => {
+  list.forEach((item) => {
     const x = {
       ...item,
-    }
+    };
     if (map.has(item.startTime + item.endTime))
-      x.available = map.get(item.startTime + item.endTime)
+      x.available = map.get(item.startTime + item.endTime);
 
-    newSlots.push(x)
-
-  })
-
-  if (sportFieldAvailable === '') return res.status(400).json({
-    status: 400,
-    message: 'not have sport field available'
+    newSlots.push(x);
   });
+
+  if (sportFieldAvailable === '')
+    return res.status(400).json({
+      status: 400,
+      message: 'not have sport field available',
+    });
 
   return res.status(201).json({
     status: 201,
     sportFieldId: sportFieldAvailable,
     availability: newSlots,
-    price: datePrice
+    price: datePrice,
   });
-}
-
+};
 
 const createBookingForUser = asyncHandler(async (req, res) => {
   /* 
@@ -169,8 +165,6 @@ const createBookingForUser = asyncHandler(async (req, res) => {
     fieldType,
   } = req.body;
 
-
-
   const newBookingBody = {
     sportCenter: sportCenterId,
     sportField: sportFieldId,
@@ -181,7 +175,7 @@ const createBookingForUser = asyncHandler(async (req, res) => {
     start,
     end,
     fieldType,
-    date: new Date(date).setHours(0, 0, 0, 0)
+    date: new Date(date).setHours(0, 0, 0, 0),
   };
 
   try {
@@ -345,14 +339,15 @@ const getHistoryBooking = asyncHandler(async (req, res) => {
   try {
     const bookingHistory = await Users.findById(_id).populate({
       path: 'bookingforUser',
-      populate: [{
-        path: 'sportCenter',
-      }, {
-        path: 'sportField',
-      }],
-
-    })
-
+      populate: [
+        {
+          path: 'sportCenter',
+        },
+        {
+          path: 'sportField',
+        },
+      ],
+    });
 
     res.status(200).json({
       status: 200,
@@ -376,20 +371,20 @@ const getAllBookingForOwner = asyncHandler(async (req, res) => {
     throw new Error('User id is not valid or not found');
   }
   try {
-    const bookingOfOwner = await Users.findById(_id)
-      .populate({
-        path: 'bookingforOwner',
-        populate: [
-          {
-            path: 'sportCenter',
-            select: 'name image address latitude longtitude openTime closeTime status',
-          },
-          {
-            path: 'sportField',
-            select: 'name price fieldType status',
-          },
-        ],
-      });
+    const bookingOfOwner = await Users.findById(_id).populate({
+      path: 'bookingforOwner',
+      populate: [
+        {
+          path: 'sportCenter',
+          select:
+            'name image address latitude longtitude openTime closeTime status',
+        },
+        {
+          path: 'sportField',
+          select: 'name price fieldType status',
+        },
+      ],
+    });
     // const bookingOfOwner = await Bookings.find({ owner: _id })
     //   .populate(
     //     'sportCenter',
@@ -425,7 +420,7 @@ const getBooking = asyncHandler(async (req, res) => {
     #swagger.description = "Get one booking - detail booking"
   */
   const { id } = req.params;
-  let isValid = await Bookings.findById(id)
+  let isValid = await Bookings.findById(id);
   if (!isValid) {
     throw new Error('Sport id is not valid or not found');
   }
@@ -436,7 +431,8 @@ const getBooking = asyncHandler(async (req, res) => {
         'sportCenter',
         'name image address latitude longtitude openTime closeTime status'
       )
-      .populate('sportField', 'name images price fieldType status').populate([{ path: 'user' }, { path: 'owner' }]);;
+      .populate('sportField', 'name images price fieldType status')
+      .populate([{ path: 'user' }, { path: 'owner' }]);
     res.status(200).json({
       status: 200,
       getBooking: getBooking,
@@ -546,5 +542,5 @@ module.exports = {
   cancelBooking,
   updateTrackingBooking,
   validateDateBooking,
-  bookingsAvailable
+  bookingsAvailable,
 };
