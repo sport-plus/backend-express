@@ -9,20 +9,21 @@ const moment = require('moment');
 const DatePrices = require('../models/datePriceModel');
 
 const validateDateBooking = async (req, res, next) => {
-  const { date, start, end, sportFieldId } = req.query
+  const { date, start, end, sportCenterId, fieldType } = req.query
+
+  const sportFields = (await SportFields.find({ $and: [{ sportCenter: sportCenterId }, { fieldType }] })).map(field => field.id)
+
   const bookings = await Bookings.find({
     $and: [
-      { sportField: sportFieldId },
       { start },
       { end },
       { status: true },
       { tracking: 'Pending' },
       { date: new Date(date).setHours(0, 0, 0, 0) },
     ]
-  })
-  console.log(bookings);
-  if (bookings.length > 0) return res.status(400).json({
-    message: 'this time already booking'
+  }).populate({ path: 'sportField' }, { fieldType })
+  if (sportFields.length === bookings.length) return res.status(400).json({
+    message: 'this time not available'
   })
 
   return res.status(200).json({
@@ -60,6 +61,8 @@ const bookingsAvailable = async (req, res) => {
     ]
   })
 
+
+
   const newSlots = []
   const list = slots[0]?.availability.map((slot, index) => ({
     startTime: slot.startTime,
@@ -81,33 +84,29 @@ const bookingsAvailable = async (req, res) => {
 
   if (bookings.length > 0) {
 
-    bookings.forEach((booking) => {
+    slots.forEach((slot) => {
+      slot.availability.forEach(async (time) => {
+        const x = await Bookings.find({
+          $and: [
+            { start: time.startTime },
+            { end: time.endTime },
+            { status: true },
+            { tracking: 'Pending' },
+            { date: new Date(date).setHours(0, 0, 0, 0) },
+          ]
+        }).populate({ path: 'sportField' }, { fieldType })
+        if (sportFields.length === x.length) {
 
-      slots.forEach((slot) => {
-        slot.availability.forEach((time) => {
-
-          if (time.startTime === booking.start
-            && time.endTime === booking.end
-            && slot.sportFieldId.toString() === booking.sportField.toString()) {
-
-
-            map.set(time.startTime + time.endTime,
-              false)
-          } else if (time.startTime === booking.start &&
-            time.endTime === booking.end &&
-            slot.sportFieldId.toString() !== booking.sportField.toString()
-            && sportCenterId.toString() === booking.sportCenter.toString()) {
-            map.set(time.startTime + time.endTime,
-              true)
-            sportFieldAvailable = slot.sportFieldId.toString()
-          }
-        })
-      }
-      )
-
-
-
-    })
+          map.set(time.startTime + time.endTime,
+            false)
+        } else {
+          map.set(time.startTime + time.endTime,
+            true)
+          sportFieldAvailable = slot.sportFieldId.toString()
+        }
+      })
+    }
+    )
   }
 
 
@@ -161,6 +160,7 @@ const createBookingForUser = asyncHandler(async (req, res) => {
     date,
     ownerId,
     userId,
+    fieldType,
   } = req.body;
 
 
@@ -174,25 +174,25 @@ const createBookingForUser = asyncHandler(async (req, res) => {
     deposit,
     start,
     end,
+    fieldType,
     date: new Date(date).setHours(0, 0, 0, 0)
   };
 
   try {
+    const sportFields = (await SportFields.find({ $and: [{ sportCenter: sportCenterId }, { fieldType }] })).map(field => field.id)
+
     const bookings = await Bookings.find({
       $and: [
-        { sportField: sportFieldId },
         { start },
         { end },
         { status: true },
         { tracking: 'Pending' },
         { date: new Date(date).setHours(0, 0, 0, 0) },
       ]
+    }).populate({ path: 'sportField' }, { fieldType })
+    if (sportFields.length === bookings.length) return res.status(400).json({
+      message: 'this time not available'
     })
-    console.log(bookings.length);
-    if (bookings.length > 0) return res.status(400).json({
-      message: 'this time already booking'
-    })
-
 
     let isValidUser = await Users.findById(ownerId);
     if (!isValidUser) {
