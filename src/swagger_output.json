@@ -1525,26 +1525,44 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "ownerCenterId": {
-                    "example": "any"
-                  },
                   "sportCenterId": {
-                    "example": "any"
+                    "type": "string",
+                    "example": "64b97f49811f84c80ee040ae"
                   },
                   "sportFieldId": {
-                    "example": "any"
+                    "type": "string",
+                    "example": "64b97f49811f84c80ee040cd"
                   },
                   "totalPrice": {
-                    "example": "any"
+                    "type": "number",
+                    "format": "double",
+                    "example": 323123
                   },
                   "deposit": {
-                    "example": "any"
+                    "type": "number",
+                    "format": "double",
+                    "example": 222
                   },
                   "start": {
-                    "example": "any"
+                    "type": "string",
+                    "example": "8:00 PM"
                   },
                   "end": {
-                    "example": "any"
+                    "type": "string",
+                    "example": "9:00 PM"
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2023-07-21T03:19:56.534Z"
+                  },
+                  "ownerId": {
+                    "type": "string",
+                    "example": "646f1a70038f779d433d88c9"
+                  },
+                  "userId": {
+                    "type": "string",
+                    "example": "646f1a58038f779d433d88c4"
                   }
                 }
               }

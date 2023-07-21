@@ -44,6 +44,10 @@ const bookingSchema = new Schema(
     phoneBooking: {
       type: String,
     },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'users',
+    },
     //
     owner: {
       type: Schema.Types.ObjectId,
