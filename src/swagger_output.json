@@ -1747,11 +1747,18 @@
             "description": "End time of the reservation (e.g., '9:00 PM')"
           },
           {
-            "name": "sportFieldId",
+            "name": "sportCenterId",
             "in": "query",
             "required": true,
             "type": "string",
-            "description": "ID of the sport field (e.g., '64a6491f252cfa9a600b8ad8')"
+            "description": "64ba30ebaa12b7ad9c8ea427"
+          },
+          {
+            "name": "fieldType",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "fieldType of the sport field (e.g., '5x5')"
           }
         ],
         "responses": {
