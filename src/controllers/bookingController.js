@@ -184,6 +184,7 @@ const createBookingForUser = asyncHandler(async (req, res) => {
         { date: new Date(date).setHours(0, 0, 0, 0) },
       ]
     })
+    console.log(bookings.length);
     if (bookings.length > 0) return res.status(400).json({
       message: 'this time already booking'
     })
@@ -205,7 +206,7 @@ const createBookingForUser = asyncHandler(async (req, res) => {
     }
     const newBooking = await Bookings.create(newBookingBody);
     addToUserBooking(_id, newBooking);
-    addToOwnerBooking(ownerCenterId, newBooking);
+    addToOwnerBooking(ownerId, newBooking);
 
     return res.status(201).json({
       status: 201,
