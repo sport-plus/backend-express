@@ -29,7 +29,7 @@ const validateDateBooking = async (req, res, next) => {
     path: 'sportField',
     match: { fieldType },
   })
-  if (sportFields.length === bookings.length) return res.status(400).json({
+  if (sportFields.length === bookings.length && bookings.length !== 0 && sportFields.length !== 0) return res.status(400).json({
     message: 'this time not available'
   })
 
@@ -103,7 +103,7 @@ const bookingsAvailable = async (req, res) => {
           path: 'sportField',
           match: { fieldType },
         })
-        if (sportFields.length === x.length) {
+        if (sportFields.length === x.length && x.length !== 0 && sportFields.length !== 0) {
           map.set(time.startTime + time.endTime, false);
         } else {
           map.set(time.startTime + time.endTime, true);
@@ -195,7 +195,7 @@ const createBookingForUser = asyncHandler(async (req, res) => {
     })
     console.log(sportFieldId);
 
-    if (sportFields.length === bookings.length) return res.status(400).json({
+    if (sportFields.length !== 0 && bookings.length !== 0 && sportFields.length === bookings.length) return res.status(400).json({
       message: 'this time not available'
     })
 
