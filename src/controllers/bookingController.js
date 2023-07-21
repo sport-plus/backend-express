@@ -15,6 +15,8 @@ const validateDateBooking = async (req, res, next) => {
       { sportField: sportFieldId },
       { start },
       { end },
+      { status: true },
+      { tracking: 'Pending' },
       { date: new Date(date).setHours(0, 0, 0, 0) },
     ]
   })
@@ -181,6 +183,8 @@ const createBookingForUser = asyncHandler(async (req, res) => {
         { sportField: sportFieldId },
         { start },
         { end },
+        { status: true },
+        { tracking: 'Pending' },
         { date: new Date(date).setHours(0, 0, 0, 0) },
       ]
     })
@@ -362,19 +366,19 @@ const getAllBookingForOwner = asyncHandler(async (req, res) => {
   }
   try {
     const bookingOfOwner = await Users.findById(_id)
-    .populate({
-      path: 'bookingforOwner',
-      populate: [
-        {
-          path: 'sportCenter',
-          select: 'name image address latitude longtitude openTime closeTime status',
-        },
-        {
-          path: 'sportField',
-          select: 'name price fieldType status',
-        },
-      ],
-    });
+      .populate({
+        path: 'bookingforOwner',
+        populate: [
+          {
+            path: 'sportCenter',
+            select: 'name image address latitude longtitude openTime closeTime status',
+          },
+          {
+            path: 'sportField',
+            select: 'name price fieldType status',
+          },
+        ],
+      });
     // const bookingOfOwner = await Bookings.find({ owner: _id })
     //   .populate(
     //     'sportCenter',
